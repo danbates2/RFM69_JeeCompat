@@ -1,0 +1,2427 @@
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.rfm69_rwReg,"ax",%progbits
+  18              		.align	1
+  19              		.global	rfm69_rwReg
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	rfm69_rwReg:
+  27              	.LVL0:
+  28              	.LFB126:
+  29              		.file 1 "Inc/rfm69.h"
+   1:Inc/rfm69.h   **** // Native mode RF69 driver.
+   2:Inc/rfm69.h   **** #include "gpio.h"
+   3:Inc/rfm69.h   **** #include "spi.h"
+   4:Inc/rfm69.h   **** 
+   5:Inc/rfm69.h   **** #ifndef RF69_SPI_BULK
+   6:Inc/rfm69.h   **** #define RF69_SPI_BULK 0
+   7:Inc/rfm69.h   **** #endif
+   8:Inc/rfm69.h   **** 
+   9:Inc/rfm69.h   **** void rfm69_init(uint8_t id, uint8_t group, int freq);
+  10:Inc/rfm69.h   **** void rfm69_encrypt(const char *key);
+  11:Inc/rfm69.h   **** void rfm69_txPower(uint8_t level);
+  12:Inc/rfm69.h   **** 
+  13:Inc/rfm69.h   **** int rfm69_receive(void *ptr, int len);
+  14:Inc/rfm69.h   **** void rfm69_send(uint8_t header, const void *ptr, int len);
+  15:Inc/rfm69.h   **** void rfm69_sleep();
+  16:Inc/rfm69.h   **** 
+  17:Inc/rfm69.h   **** uint8_t rfm69_rwReg (uint8_t cmd, uint8_t val);
+  18:Inc/rfm69.h   **** uint8_t rfm69_readReg(uint8_t addr);
+  19:Inc/rfm69.h   **** void rfm69_writeReg(uint8_t addr, uint8_t val);
+  20:Inc/rfm69.h   **** 
+  21:Inc/rfm69.h   **** int16_t afc;
+  22:Inc/rfm69.h   **** uint8_t rssi;
+  23:Inc/rfm69.h   **** uint8_t lna;
+  24:Inc/rfm69.h   **** uint8_t myId;
+  25:Inc/rfm69.h   **** uint8_t parity;
+  26:Inc/rfm69.h   **** 
+  27:Inc/rfm69.h   **** 
+  28:Inc/rfm69.h   **** uint8_t rfm69_rwReg (uint8_t cmd, uint8_t val) {
+  30              		.loc 1 28 48 view -0
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 2
+
+
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 28 48 is_stmt 0 view .LVU1
+  35 0000 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42 0002 0646     		mov	r6, r0
+  43 0004 0D46     		mov	r5, r1
+  29:Inc/rfm69.h   ****     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+  44              		.loc 1 29 5 is_stmt 1 view .LVU2
+  45 0006 0A4C     		ldr	r4, .L3
+  46 0008 0022     		movs	r2, #0
+  47 000a 0821     		movs	r1, #8
+  48              	.LVL1:
+  49              		.loc 1 29 5 is_stmt 0 view .LVU3
+  50 000c 2046     		mov	r0, r4
+  51              	.LVL2:
+  52              		.loc 1 29 5 view .LVU4
+  53 000e FFF7FEFF 		bl	HAL_GPIO_WritePin
+  54              	.LVL3:
+  30:Inc/rfm69.h   ****     SPI_transfer8(cmd);
+  55              		.loc 1 30 5 is_stmt 1 view .LVU5
+  56 0012 3046     		mov	r0, r6
+  57 0014 FFF7FEFF 		bl	SPI_transfer8
+  58              	.LVL4:
+  31:Inc/rfm69.h   ****     uint8_t in = SPI_transfer8(val);
+  59              		.loc 1 31 5 view .LVU6
+  60              		.loc 1 31 18 is_stmt 0 view .LVU7
+  61 0018 2846     		mov	r0, r5
+  62 001a FFF7FEFF 		bl	SPI_transfer8
+  63              	.LVL5:
+  64 001e 0546     		mov	r5, r0
+  65              	.LVL6:
+  32:Inc/rfm69.h   ****     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
+  66              		.loc 1 32 5 is_stmt 1 view .LVU8
+  67 0020 0122     		movs	r2, #1
+  68 0022 0821     		movs	r1, #8
+  69 0024 2046     		mov	r0, r4
+  70 0026 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  71              	.LVL7:
+  33:Inc/rfm69.h   ****     return in;
+  72              		.loc 1 33 5 view .LVU9
+  34:Inc/rfm69.h   **** }
+  73              		.loc 1 34 1 is_stmt 0 view .LVU10
+  74 002a 2846     		mov	r0, r5
+  75 002c 70BD     		pop	{r4, r5, r6, pc}
+  76              	.LVL8:
+  77              	.L4:
+  78              		.loc 1 34 1 view .LVU11
+  79 002e 00BF     		.align	2
+  80              	.L3:
+  81 0030 00040048 		.word	1207960576
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 3
+
+
+  82              		.cfi_endproc
+  83              	.LFE126:
+  85              		.section	.text.rfm69_readReg,"ax",%progbits
+  86              		.align	1
+  87              		.global	rfm69_readReg
+  88              		.syntax unified
+  89              		.thumb
+  90              		.thumb_func
+  91              		.fpu fpv4-sp-d16
+  93              	rfm69_readReg:
+  94              	.LVL9:
+  95              	.LFB127:
+  35:Inc/rfm69.h   **** 
+  36:Inc/rfm69.h   **** 
+  37:Inc/rfm69.h   **** uint8_t rfm69_readReg(uint8_t addr) { return rfm69_rwReg(addr, 0); }
+  96              		.loc 1 37 37 is_stmt 1 view -0
+  97              		.cfi_startproc
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100              		.loc 1 37 37 is_stmt 0 view .LVU13
+ 101 0000 08B5     		push	{r3, lr}
+ 102              	.LCFI1:
+ 103              		.cfi_def_cfa_offset 8
+ 104              		.cfi_offset 3, -8
+ 105              		.cfi_offset 14, -4
+ 106              		.loc 1 37 39 is_stmt 1 view .LVU14
+ 107              		.loc 1 37 46 is_stmt 0 view .LVU15
+ 108 0002 0021     		movs	r1, #0
+ 109 0004 FFF7FEFF 		bl	rfm69_rwReg
+ 110              	.LVL10:
+ 111              		.loc 1 37 1 view .LVU16
+ 112 0008 08BD     		pop	{r3, pc}
+ 113              		.cfi_endproc
+ 114              	.LFE127:
+ 116              		.section	.text.rfm69_writeReg,"ax",%progbits
+ 117              		.align	1
+ 118              		.global	rfm69_writeReg
+ 119              		.syntax unified
+ 120              		.thumb
+ 121              		.thumb_func
+ 122              		.fpu fpv4-sp-d16
+ 124              	rfm69_writeReg:
+ 125              	.LVL11:
+ 126              	.LFB128:
+  38:Inc/rfm69.h   **** void rfm69_writeReg(uint8_t addr, uint8_t val) { rfm69_rwReg(addr | 0x80, val); }
+ 127              		.loc 1 38 48 is_stmt 1 view -0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131              		.loc 1 38 48 is_stmt 0 view .LVU18
+ 132 0000 08B5     		push	{r3, lr}
+ 133              	.LCFI2:
+ 134              		.cfi_def_cfa_offset 8
+ 135              		.cfi_offset 3, -8
+ 136              		.cfi_offset 14, -4
+ 137              		.loc 1 38 50 is_stmt 1 view .LVU19
+ 138 0002 40F08000 		orr	r0, r0, #128
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 4
+
+
+ 139              	.LVL12:
+ 140              		.loc 1 38 50 is_stmt 0 view .LVU20
+ 141 0006 FFF7FEFF 		bl	rfm69_rwReg
+ 142              	.LVL13:
+ 143              		.loc 1 38 1 view .LVU21
+ 144 000a 08BD     		pop	{r3, pc}
+ 145              		.cfi_endproc
+ 146              	.LFE128:
+ 148              		.section	.text.rfm69_setMode,"ax",%progbits
+ 149              		.align	1
+ 150              		.global	rfm69_setMode
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 154              		.fpu fpv4-sp-d16
+ 156              	rfm69_setMode:
+ 157              	.LVL14:
+ 158              	.LFB129:
+  39:Inc/rfm69.h   **** /*
+  40:Inc/rfm69.h   **** uint8_t rfm69_readReg(uint8_t addr)
+  41:Inc/rfm69.h   **** {
+  42:Inc/rfm69.h   ****   uint8_t regval;
+  43:Inc/rfm69.h   ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+  44:Inc/rfm69.h   ****   SPI_transfer8(addr & 0x7F);
+  45:Inc/rfm69.h   ****   regval = SPI_transfer8(0);
+  46:Inc/rfm69.h   ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
+  47:Inc/rfm69.h   ****   return regval;
+  48:Inc/rfm69.h   **** }
+  49:Inc/rfm69.h   **** 
+  50:Inc/rfm69.h   **** void rfm69_writeReg(uint8_t addr, uint8_t value)
+  51:Inc/rfm69.h   **** {
+  52:Inc/rfm69.h   ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+  53:Inc/rfm69.h   ****   SPI_transfer8(addr | 0x80);
+  54:Inc/rfm69.h   ****   SPI_transfer8(value);
+  55:Inc/rfm69.h   ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
+  56:Inc/rfm69.h   **** }
+  57:Inc/rfm69.h   **** */
+  58:Inc/rfm69.h   **** #define  REG_FIFO         0x00
+  59:Inc/rfm69.h   **** #define  REG_OPMODE       0x01
+  60:Inc/rfm69.h   **** #define  REG_FRFMSB       0x07
+  61:Inc/rfm69.h   **** #define  REG_PALEVEL      0x11
+  62:Inc/rfm69.h   **** #define  REG_LNAVALUE     0x18
+  63:Inc/rfm69.h   **** #define  REG_AFCMSB       0x1F
+  64:Inc/rfm69.h   **** #define  REG_AFCLSB       0x20
+  65:Inc/rfm69.h   **** #define  REG_FEIMSB       0x21
+  66:Inc/rfm69.h   **** #define  REG_FEILSB       0x22
+  67:Inc/rfm69.h   **** #define  REG_RSSIVALUE    0x24
+  68:Inc/rfm69.h   **** #define  REG_IRQFLAGS1    0x27
+  69:Inc/rfm69.h   **** #define  REG_IRQFLAGS2    0x28
+  70:Inc/rfm69.h   **** #define  REG_SYNCVALUE1   0x2F
+  71:Inc/rfm69.h   **** #define  REG_SYNCVALUE2   0x30
+  72:Inc/rfm69.h   **** #define  REG_NODEADDR     0x39
+  73:Inc/rfm69.h   **** #define  REG_BCASTADDR    0x3A
+  74:Inc/rfm69.h   **** #define  REG_FIFOTHRESH   0x3C
+  75:Inc/rfm69.h   **** #define  REG_PKTCONFIG2   0x3D
+  76:Inc/rfm69.h   **** #define  REG_AESKEYMSB    0x3E
+  77:Inc/rfm69.h   **** 
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 5
+
+
+  78:Inc/rfm69.h   **** #define  MODE_SLEEP       0 << 2
+  79:Inc/rfm69.h   **** #define  MODE_STANDBY     1 << 2
+  80:Inc/rfm69.h   **** #define  MODE_TRANSMIT    3 << 2
+  81:Inc/rfm69.h   **** #define  MODE_RECEIVE     4 << 2
+  82:Inc/rfm69.h   **** 
+  83:Inc/rfm69.h   **** #define  START_TX    0xC2
+  84:Inc/rfm69.h   **** #define  STOP_TX     0x42
+  85:Inc/rfm69.h   **** 
+  86:Inc/rfm69.h   **** #define  RCCALSTART          0x80
+  87:Inc/rfm69.h   **** #define  IRQ1_MODEREADY      1 << 7
+  88:Inc/rfm69.h   **** #define  IRQ1_RXREADY        1 << 6
+  89:Inc/rfm69.h   **** #define  IRQ1_SYNADDRMATCH   1 << 0
+  90:Inc/rfm69.h   **** 
+  91:Inc/rfm69.h   **** #define  IRQ2_FIFONOTEMPTY   1 << 6
+  92:Inc/rfm69.h   **** #define  IRQ2_PACKETSENT     1 << 3
+  93:Inc/rfm69.h   **** #define  IRQ2_PAYLOADREADY   1 << 2
+  94:Inc/rfm69.h   **** 
+  95:Inc/rfm69.h   **** 
+  96:Inc/rfm69.h   **** 
+  97:Inc/rfm69.h   **** void rfm69_setMode(uint8_t newMode);
+  98:Inc/rfm69.h   **** void rfm69_configure(const uint8_t *p);
+  99:Inc/rfm69.h   **** void rfm69_setFrequency(uint32_t freq);
+ 100:Inc/rfm69.h   **** 
+ 101:Inc/rfm69.h   **** 
+ 102:Inc/rfm69.h   **** uint8_t mode;
+ 103:Inc/rfm69.h   **** 
+ 104:Inc/rfm69.h   **** // driver implementation
+ 105:Inc/rfm69.h   **** 
+ 106:Inc/rfm69.h   **** void rfm69_setMode(uint8_t newMode) {
+ 159              		.loc 1 106 37 is_stmt 1 view -0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163              		.loc 1 106 37 is_stmt 0 view .LVU23
+ 164 0000 10B5     		push	{r4, lr}
+ 165              	.LCFI3:
+ 166              		.cfi_def_cfa_offset 8
+ 167              		.cfi_offset 4, -8
+ 168              		.cfi_offset 14, -4
+ 169 0002 0446     		mov	r4, r0
+ 107:Inc/rfm69.h   ****   mode = newMode;
+ 170              		.loc 1 107 3 is_stmt 1 view .LVU24
+ 171              		.loc 1 107 8 is_stmt 0 view .LVU25
+ 172 0004 094B     		ldr	r3, .L12
+ 173 0006 1870     		strb	r0, [r3]
+ 108:Inc/rfm69.h   ****   rfm69_writeReg(REG_OPMODE, (rfm69_readReg(REG_OPMODE) & 0xE3) | newMode);
+ 174              		.loc 1 108 3 is_stmt 1 view .LVU26
+ 175              		.loc 1 108 31 is_stmt 0 view .LVU27
+ 176 0008 0120     		movs	r0, #1
+ 177              	.LVL15:
+ 178              		.loc 1 108 31 view .LVU28
+ 179 000a FFF7FEFF 		bl	rfm69_readReg
+ 180              	.LVL16:
+ 181              		.loc 1 108 31 view .LVU29
+ 182 000e 41B2     		sxtb	r1, r0
+ 183              		.loc 1 108 57 view .LVU30
+ 184 0010 21F01C01 		bic	r1, r1, #28
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 6
+
+
+ 185              		.loc 1 108 65 view .LVU31
+ 186 0014 2143     		orrs	r1, r1, r4
+ 187              		.loc 1 108 3 view .LVU32
+ 188 0016 C9B2     		uxtb	r1, r1
+ 189 0018 0120     		movs	r0, #1
+ 190 001a FFF7FEFF 		bl	rfm69_writeReg
+ 191              	.LVL17:
+ 109:Inc/rfm69.h   ****   while ((rfm69_readReg(REG_IRQFLAGS1) & IRQ1_MODEREADY) == 0);
+ 192              		.loc 1 109 3 is_stmt 1 view .LVU33
+ 193              	.L10:
+ 194              		.loc 1 109 63 discriminator 1 view .LVU34
+ 195              		.loc 1 109 11 is_stmt 0 discriminator 1 view .LVU35
+ 196 001e 2720     		movs	r0, #39
+ 197 0020 FFF7FEFF 		bl	rfm69_readReg
+ 198              	.LVL18:
+ 199              		.loc 1 109 9 discriminator 1 view .LVU36
+ 200 0024 10F0800F 		tst	r0, #128
+ 201 0028 F9D0     		beq	.L10
+ 110:Inc/rfm69.h   **** }
+ 202              		.loc 1 110 1 view .LVU37
+ 203 002a 10BD     		pop	{r4, pc}
+ 204              	.L13:
+ 205              		.align	2
+ 206              	.L12:
+ 207 002c 00000000 		.word	mode
+ 208              		.cfi_endproc
+ 209              	.LFE129:
+ 211              		.section	.text.rfm69_setFrequency,"ax",%progbits
+ 212              		.align	1
+ 213              		.global	rfm69_setFrequency
+ 214              		.syntax unified
+ 215              		.thumb
+ 216              		.thumb_func
+ 217              		.fpu fpv4-sp-d16
+ 219              	rfm69_setFrequency:
+ 220              	.LVL19:
+ 221              	.LFB130:
+ 111:Inc/rfm69.h   **** 
+ 112:Inc/rfm69.h   **** void rfm69_setFrequency(uint32_t hz) {
+ 222              		.loc 1 112 38 is_stmt 1 view -0
+ 223              		.cfi_startproc
+ 224              		@ args = 0, pretend = 0, frame = 0
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 226              		.loc 1 112 38 is_stmt 0 view .LVU39
+ 227 0000 38B5     		push	{r3, r4, r5, lr}
+ 228              	.LCFI4:
+ 229              		.cfi_def_cfa_offset 16
+ 230              		.cfi_offset 3, -16
+ 231              		.cfi_offset 4, -12
+ 232              		.cfi_offset 5, -8
+ 233              		.cfi_offset 14, -4
+ 113:Inc/rfm69.h   ****   // accept any frequency scale as input, including KHz and MHz
+ 114:Inc/rfm69.h   ****   // multiply by 10 until freq >= 100 MHz (don't specify 0 as input!)
+ 115:Inc/rfm69.h   ****   while (hz < 100000000)
+ 234              		.loc 1 115 3 is_stmt 1 view .LVU40
+ 235              	.LVL20:
+ 236              	.L15:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 7
+
+
+ 237              		.loc 1 115 9 is_stmt 0 view .LVU41
+ 238 0002 0E4B     		ldr	r3, .L19
+ 239 0004 9842     		cmp	r0, r3
+ 240 0006 03D8     		bhi	.L18
+ 116:Inc/rfm69.h   ****     hz *= 10;
+ 241              		.loc 1 116 5 is_stmt 1 view .LVU42
+ 242              		.loc 1 116 8 is_stmt 0 view .LVU43
+ 243 0008 00EB8003 		add	r3, r0, r0, lsl #2
+ 244 000c 5800     		lsls	r0, r3, #1
+ 245              	.LVL21:
+ 246              		.loc 1 116 8 view .LVU44
+ 247 000e F8E7     		b	.L15
+ 248              	.L18:
+ 117:Inc/rfm69.h   **** 
+ 118:Inc/rfm69.h   ****   // Frequency steps are in units of (32,000,000 >> 19) = 61.03515625 Hz
+ 119:Inc/rfm69.h   ****   // use multiples of 64 to avoid multi-precision arithmetic, i.e. 3906.25 Hz
+ 120:Inc/rfm69.h   ****   // due to this, the lower 6 bits of the calculated factor will always be 0
+ 121:Inc/rfm69.h   ****   // this is still 4 ppm, i.e. well below the radio's 32 MHz crystal accuracy
+ 122:Inc/rfm69.h   ****   // 868.0 MHz = 0xD90000, 868.3 MHz = 0xD91300, 915.0 MHz = 0xE4C000
+ 123:Inc/rfm69.h   ****   uint32_t frf = (hz << 2) / (32000000L >> 11);
+ 249              		.loc 1 123 3 is_stmt 1 view .LVU45
+ 250              		.loc 1 123 22 is_stmt 0 view .LVU46
+ 251 0010 8000     		lsls	r0, r0, #2
+ 252              	.LVL22:
+ 253              		.loc 1 123 12 view .LVU47
+ 254 0012 0B4C     		ldr	r4, .L19+4
+ 255 0014 A4FB0034 		umull	r3, r4, r4, r0
+ 256 0018 250B     		lsrs	r5, r4, #12
+ 257              	.LVL23:
+ 124:Inc/rfm69.h   ****   rfm69_writeReg(REG_FRFMSB, frf >> 10);
+ 258              		.loc 1 124 3 is_stmt 1 view .LVU48
+ 259 001a C4F38751 		ubfx	r1, r4, #22, #8
+ 260 001e 0720     		movs	r0, #7
+ 261 0020 FFF7FEFF 		bl	rfm69_writeReg
+ 262              	.LVL24:
+ 125:Inc/rfm69.h   ****   rfm69_writeReg(REG_FRFMSB + 1, frf >> 2);
+ 263              		.loc 1 125 3 view .LVU49
+ 264 0024 C4F38731 		ubfx	r1, r4, #14, #8
+ 265 0028 0820     		movs	r0, #8
+ 266 002a FFF7FEFF 		bl	rfm69_writeReg
+ 267              	.LVL25:
+ 126:Inc/rfm69.h   ****   rfm69_writeReg(REG_FRFMSB + 2, frf << 6);
+ 268              		.loc 1 126 3 view .LVU50
+ 269 002e A901     		lsls	r1, r5, #6
+ 270 0030 01F0C001 		and	r1, r1, #192
+ 271 0034 0920     		movs	r0, #9
+ 272 0036 FFF7FEFF 		bl	rfm69_writeReg
+ 273              	.LVL26:
+ 127:Inc/rfm69.h   **** }
+ 274              		.loc 1 127 1 is_stmt 0 view .LVU51
+ 275 003a 38BD     		pop	{r3, r4, r5, pc}
+ 276              	.LVL27:
+ 277              	.L20:
+ 278              		.loc 1 127 1 view .LVU52
+ 279              		.align	2
+ 280              	.L19:
+ 281 003c FFE0F505 		.word	99999999
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 8
+
+
+ 282 0040 83DE1B43 		.word	1125899907
+ 283              		.cfi_endproc
+ 284              	.LFE130:
+ 286              		.section	.text.rfm69_configure,"ax",%progbits
+ 287              		.align	1
+ 288              		.global	rfm69_configure
+ 289              		.syntax unified
+ 290              		.thumb
+ 291              		.thumb_func
+ 292              		.fpu fpv4-sp-d16
+ 294              	rfm69_configure:
+ 295              	.LVL28:
+ 296              	.LFB131:
+ 128:Inc/rfm69.h   **** 
+ 129:Inc/rfm69.h   **** void rfm69_configure(const uint8_t *p) {
+ 297              		.loc 1 129 40 is_stmt 1 view -0
+ 298              		.cfi_startproc
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 0, uses_anonymous_args = 0
+ 301              		.loc 1 129 40 is_stmt 0 view .LVU54
+ 302 0000 10B5     		push	{r4, lr}
+ 303              	.LCFI5:
+ 304              		.cfi_def_cfa_offset 8
+ 305              		.cfi_offset 4, -8
+ 306              		.cfi_offset 14, -4
+ 307 0002 0446     		mov	r4, r0
+ 308              	.LVL29:
+ 309              	.L23:
+ 130:Inc/rfm69.h   ****   while (true) {
+ 310              		.loc 1 130 3 is_stmt 1 view .LVU55
+ 311              	.LBB2:
+ 131:Inc/rfm69.h   ****     uint8_t cmd = p[0];
+ 312              		.loc 1 131 5 view .LVU56
+ 313              		.loc 1 131 13 is_stmt 0 view .LVU57
+ 314 0004 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 315              	.LVL30:
+ 132:Inc/rfm69.h   ****     if (cmd == 0)
+ 316              		.loc 1 132 5 is_stmt 1 view .LVU58
+ 317              		.loc 1 132 8 is_stmt 0 view .LVU59
+ 318 0006 20B1     		cbz	r0, .L21
+ 133:Inc/rfm69.h   ****       break;
+ 134:Inc/rfm69.h   ****     rfm69_writeReg(cmd, p[1]);
+ 319              		.loc 1 134 5 is_stmt 1 view .LVU60
+ 320 0008 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 321 000a FFF7FEFF 		bl	rfm69_writeReg
+ 322              	.LVL31:
+ 135:Inc/rfm69.h   ****     p += 2;
+ 323              		.loc 1 135 5 view .LVU61
+ 324              		.loc 1 135 7 is_stmt 0 view .LVU62
+ 325 000e 0234     		adds	r4, r4, #2
+ 326              	.LVL32:
+ 327              		.loc 1 135 7 view .LVU63
+ 328              	.LBE2:
+ 130:Inc/rfm69.h   ****     uint8_t cmd = p[0];
+ 329              		.loc 1 130 16 view .LVU64
+ 330 0010 F8E7     		b	.L23
+ 331              	.LVL33:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 9
+
+
+ 332              	.L21:
+ 136:Inc/rfm69.h   ****   }
+ 137:Inc/rfm69.h   **** }
+ 333              		.loc 1 137 1 view .LVU65
+ 334 0012 10BD     		pop	{r4, pc}
+ 335              		.loc 1 137 1 view .LVU66
+ 336              		.cfi_endproc
+ 337              	.LFE131:
+ 339              		.section	.text.rfm69_init,"ax",%progbits
+ 340              		.align	1
+ 341              		.global	rfm69_init
+ 342              		.syntax unified
+ 343              		.thumb
+ 344              		.thumb_func
+ 345              		.fpu fpv4-sp-d16
+ 347              	rfm69_init:
+ 348              	.LVL34:
+ 349              	.LFB132:
+ 138:Inc/rfm69.h   **** 
+ 139:Inc/rfm69.h   **** static const uint8_t configRegs[] = {
+ 140:Inc/rfm69.h   ****     // POR value is better for first rf_sleep  0x01, 0x00, // OpMode = sleep
+ 141:Inc/rfm69.h   ****     0x02, 0x00, // DataModul = packet mode, fsk
+ 142:Inc/rfm69.h   ****     0x03, 0x02, // BitRateMsb, data rate = 49,261 khz
+ 143:Inc/rfm69.h   ****     0x04, 0x8A, // BitRateLsb, divider = 32 MHz / 650
+ 144:Inc/rfm69.h   ****     0x05, 0x02, // FdevMsb = 45 KHz
+ 145:Inc/rfm69.h   ****     0x06, 0xE1, // FdevLsb = 45 KHz
+ 146:Inc/rfm69.h   ****     0x0B, 0x20, // Low M
+ 147:Inc/rfm69.h   ****     0x19, 0x4A, // RxBw 100 KHz
+ 148:Inc/rfm69.h   ****     0x1A, 0x42, // AfcBw 125 KHz
+ 149:Inc/rfm69.h   ****     0x1E, 0x0C, // AfcAutoclearOn, AfcAutoOn
+ 150:Inc/rfm69.h   ****     0x25, 0x40, //0x80, // DioMapping1 = SyncAddress (Rx)
+ 151:Inc/rfm69.h   ****     0x26, 0x07, // disable clkout
+ 152:Inc/rfm69.h   ****     0x29, 0xA0, // RssiThresh -80 dB
+ 153:Inc/rfm69.h   ****     0x2D, 0x05, // PreambleSize = 5
+ 154:Inc/rfm69.h   ****     0x2E, 0x88, // SyncConfig = sync on, sync size = 2
+ 155:Inc/rfm69.h   ****     0x2F, 0x2D, // SyncValue1 = 0x2D
+ 156:Inc/rfm69.h   ****     0x37, 0xD0, // PacketConfig1 = fixed, white, no filtering
+ 157:Inc/rfm69.h   ****     0x38, 0x42, // PayloadLength = 0, unlimited
+ 158:Inc/rfm69.h   ****     0x3C, 0x8F, // FifoTresh, not empty, level 15
+ 159:Inc/rfm69.h   ****     0x3D, 0x12, // 0x10, // PacketConfig2, interpkt = 1, autorxrestart off
+ 160:Inc/rfm69.h   ****     0x6F, 0x20, // TestDagc ...
+ 161:Inc/rfm69.h   ****     0x71, 0x02, // RegTestAfc
+ 162:Inc/rfm69.h   ****     0};
+ 163:Inc/rfm69.h   **** 
+ 164:Inc/rfm69.h   **** 
+ 165:Inc/rfm69.h   **** void rfm69_init(uint8_t id, uint8_t group, int freq) {
+ 350              		.loc 1 165 54 is_stmt 1 view -0
+ 351              		.cfi_startproc
+ 352              		@ args = 0, pretend = 0, frame = 0
+ 353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354              		.loc 1 165 54 is_stmt 0 view .LVU68
+ 355 0000 70B5     		push	{r4, r5, r6, lr}
+ 356              	.LCFI6:
+ 357              		.cfi_def_cfa_offset 16
+ 358              		.cfi_offset 4, -16
+ 359              		.cfi_offset 5, -12
+ 360              		.cfi_offset 6, -8
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 10
+
+
+ 361              		.cfi_offset 14, -4
+ 362 0002 0C46     		mov	r4, r1
+ 363 0004 1646     		mov	r6, r2
+ 166:Inc/rfm69.h   ****   myId = id;
+ 364              		.loc 1 166 3 is_stmt 1 view .LVU69
+ 365              		.loc 1 166 8 is_stmt 0 view .LVU70
+ 366 0006 0D4B     		ldr	r3, .L27
+ 367 0008 1870     		strb	r0, [r3]
+ 167:Inc/rfm69.h   **** 
+ 168:Inc/rfm69.h   ****   // b7 = group b7^b5^b3^b1, b6 = group b6^b4^b2^b0
+ 169:Inc/rfm69.h   ****   parity = group ^ (group << 4);
+ 368              		.loc 1 169 3 is_stmt 1 view .LVU71
+ 369              		.loc 1 169 18 is_stmt 0 view .LVU72
+ 370 000a 81EA0113 		eor	r3, r1, r1, lsl #4
+ 371 000e 5BB2     		sxtb	r3, r3
+ 372 0010 DAB2     		uxtb	r2, r3
+ 373              	.LVL35:
+ 170:Inc/rfm69.h   ****   parity = (parity ^ (parity << 2)) & 0xC0;
+ 374              		.loc 1 170 3 is_stmt 1 view .LVU73
+ 375              		.loc 1 170 20 is_stmt 0 view .LVU74
+ 376 0012 83EA8203 		eor	r3, r3, r2, lsl #2
+ 377              		.loc 1 170 37 view .LVU75
+ 378 0016 03F0C003 		and	r3, r3, #192
+ 379              		.loc 1 170 10 view .LVU76
+ 380 001a 094A     		ldr	r2, .L27+4
+ 381 001c 1370     		strb	r3, [r2]
+ 171:Inc/rfm69.h   **** 
+ 172:Inc/rfm69.h   ****   // 10 MHz, i.e. 30 MHz / 3 (or 4 MHz if clock is still at 12 MHz)
+ 173:Inc/rfm69.h   ****   //spi.master(3);
+ 174:Inc/rfm69.h   ****   //do
+ 175:Inc/rfm69.h   ****   //  rfm69_writeReg(REG_SYNCVALUE1, 0x2D);
+ 176:Inc/rfm69.h   ****   //while (rfm69_readReg(REG_SYNCVALUE1) != 0xAA);
+ 177:Inc/rfm69.h   **** //  do
+ 178:Inc/rfm69.h   ****   //  rfm69_writeReg(REG_SYNCVALUE1, 0x55);
+ 179:Inc/rfm69.h   ****   //while (rfm69_readReg(REG_SYNCVALUE1) != 0x55);
+ 180:Inc/rfm69.h   **** 
+ 181:Inc/rfm69.h   ****   rfm69_configure(configRegs);
+ 382              		.loc 1 181 3 is_stmt 1 view .LVU77
+ 383 001e 094D     		ldr	r5, .L27+8
+ 384 0020 2846     		mov	r0, r5
+ 385              	.LVL36:
+ 386              		.loc 1 181 3 is_stmt 0 view .LVU78
+ 387 0022 FFF7FEFF 		bl	rfm69_configure
+ 388              	.LVL37:
+ 182:Inc/rfm69.h   ****   rfm69_configure(configRegs); // TODO why is this needed ???
+ 389              		.loc 1 182 3 is_stmt 1 view .LVU79
+ 390 0026 2846     		mov	r0, r5
+ 391 0028 FFF7FEFF 		bl	rfm69_configure
+ 392              	.LVL38:
+ 183:Inc/rfm69.h   ****   rfm69_setFrequency(freq);
+ 393              		.loc 1 183 3 view .LVU80
+ 394 002c 3046     		mov	r0, r6
+ 395 002e FFF7FEFF 		bl	rfm69_setFrequency
+ 396              	.LVL39:
+ 184:Inc/rfm69.h   **** 
+ 185:Inc/rfm69.h   ****   rfm69_writeReg(REG_SYNCVALUE2, group);
+ 397              		.loc 1 185 3 view .LVU81
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 11
+
+
+ 398 0032 2146     		mov	r1, r4
+ 399 0034 3020     		movs	r0, #48
+ 400 0036 FFF7FEFF 		bl	rfm69_writeReg
+ 401              	.LVL40:
+ 186:Inc/rfm69.h   **** }
+ 402              		.loc 1 186 1 is_stmt 0 view .LVU82
+ 403 003a 70BD     		pop	{r4, r5, r6, pc}
+ 404              	.LVL41:
+ 405              	.L28:
+ 406              		.loc 1 186 1 view .LVU83
+ 407              		.align	2
+ 408              	.L27:
+ 409 003c 00000000 		.word	myId
+ 410 0040 00000000 		.word	parity
+ 411 0044 00000000 		.word	.LANCHOR0
+ 412              		.cfi_endproc
+ 413              	.LFE132:
+ 415              		.section	.text.rfm69_encrypt,"ax",%progbits
+ 416              		.align	1
+ 417              		.global	rfm69_encrypt
+ 418              		.syntax unified
+ 419              		.thumb
+ 420              		.thumb_func
+ 421              		.fpu fpv4-sp-d16
+ 423              	rfm69_encrypt:
+ 424              	.LVL42:
+ 425              	.LFB133:
+ 187:Inc/rfm69.h   **** 
+ 188:Inc/rfm69.h   **** void rfm69_encrypt(const char *key) {
+ 426              		.loc 1 188 37 is_stmt 1 view -0
+ 427              		.cfi_startproc
+ 428              		@ args = 0, pretend = 0, frame = 0
+ 429              		@ frame_needed = 0, uses_anonymous_args = 0
+ 430              		.loc 1 188 37 is_stmt 0 view .LVU85
+ 431 0000 70B5     		push	{r4, r5, r6, lr}
+ 432              	.LCFI7:
+ 433              		.cfi_def_cfa_offset 16
+ 434              		.cfi_offset 4, -16
+ 435              		.cfi_offset 5, -12
+ 436              		.cfi_offset 6, -8
+ 437              		.cfi_offset 14, -4
+ 438 0002 0546     		mov	r5, r0
+ 189:Inc/rfm69.h   ****   uint8_t cfg = rfm69_readReg(REG_PKTCONFIG2) & ~0x01;
+ 439              		.loc 1 189 3 is_stmt 1 view .LVU86
+ 440              		.loc 1 189 17 is_stmt 0 view .LVU87
+ 441 0004 3D20     		movs	r0, #61
+ 442              	.LVL43:
+ 443              		.loc 1 189 17 view .LVU88
+ 444 0006 FFF7FEFF 		bl	rfm69_readReg
+ 445              	.LVL44:
+ 446              		.loc 1 189 11 view .LVU89
+ 447 000a 00F0FE06 		and	r6, r0, #254
+ 448              	.LVL45:
+ 190:Inc/rfm69.h   ****   if (key) {
+ 449              		.loc 1 190 3 is_stmt 1 view .LVU90
+ 450              		.loc 1 190 6 is_stmt 0 view .LVU91
+ 451 000e 8DB1     		cbz	r5, .L31
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 12
+
+
+ 452              	.LBB3:
+ 191:Inc/rfm69.h   ****     for (int i = 0; i < 16; ++i) {
+ 453              		.loc 1 191 14 view .LVU92
+ 454 0010 0024     		movs	r4, #0
+ 455 0012 00E0     		b	.L30
+ 456              	.LVL46:
+ 457              	.L32:
+ 458              		.loc 1 191 29 discriminator 2 view .LVU93
+ 459 0014 0134     		adds	r4, r4, #1
+ 460              	.LVL47:
+ 461              	.L30:
+ 462              		.loc 1 191 5 discriminator 1 view .LVU94
+ 463 0016 0F2C     		cmp	r4, #15
+ 464 0018 0ADC     		bgt	.L36
+ 192:Inc/rfm69.h   ****       rfm69_writeReg(REG_AESKEYMSB + i, *key);
+ 465              		.loc 1 192 7 is_stmt 1 view .LVU95
+ 466 001a 04F13E00 		add	r0, r4, #62
+ 467 001e 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
+ 468 0020 C0B2     		uxtb	r0, r0
+ 469 0022 FFF7FEFF 		bl	rfm69_writeReg
+ 470              	.LVL48:
+ 193:Inc/rfm69.h   ****       if (*key != 0)
+ 471              		.loc 1 193 7 view .LVU96
+ 472              		.loc 1 193 11 is_stmt 0 view .LVU97
+ 473 0026 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 474              		.loc 1 193 10 view .LVU98
+ 475 0028 002B     		cmp	r3, #0
+ 476 002a F3D0     		beq	.L32
+ 194:Inc/rfm69.h   ****         ++key;
+ 477              		.loc 1 194 9 is_stmt 1 view .LVU99
+ 478 002c 0135     		adds	r5, r5, #1
+ 479              	.LVL49:
+ 480              		.loc 1 194 9 is_stmt 0 view .LVU100
+ 481 002e F1E7     		b	.L32
+ 482              	.L36:
+ 483              		.loc 1 194 9 view .LVU101
+ 484              	.LBE3:
+ 195:Inc/rfm69.h   ****     }
+ 196:Inc/rfm69.h   ****     cfg |= 0x01;
+ 485              		.loc 1 196 5 is_stmt 1 view .LVU102
+ 486              		.loc 1 196 9 is_stmt 0 view .LVU103
+ 487 0030 46F00106 		orr	r6, r6, #1
+ 488              	.LVL50:
+ 489              	.L31:
+ 197:Inc/rfm69.h   ****   }
+ 198:Inc/rfm69.h   ****   rfm69_writeReg(REG_PKTCONFIG2, cfg);
+ 490              		.loc 1 198 3 is_stmt 1 view .LVU104
+ 491 0034 3146     		mov	r1, r6
+ 492 0036 3D20     		movs	r0, #61
+ 493 0038 FFF7FEFF 		bl	rfm69_writeReg
+ 494              	.LVL51:
+ 199:Inc/rfm69.h   **** }
+ 495              		.loc 1 199 1 is_stmt 0 view .LVU105
+ 496 003c 70BD     		pop	{r4, r5, r6, pc}
+ 497              		.loc 1 199 1 view .LVU106
+ 498              		.cfi_endproc
+ 499              	.LFE133:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 13
+
+
+ 501              		.section	.text.rfm69_txPower,"ax",%progbits
+ 502              		.align	1
+ 503              		.global	rfm69_txPower
+ 504              		.syntax unified
+ 505              		.thumb
+ 506              		.thumb_func
+ 507              		.fpu fpv4-sp-d16
+ 509              	rfm69_txPower:
+ 510              	.LVL52:
+ 511              	.LFB134:
+ 200:Inc/rfm69.h   **** 
+ 201:Inc/rfm69.h   **** void rfm69_txPower(uint8_t level) {
+ 512              		.loc 1 201 35 is_stmt 1 view -0
+ 513              		.cfi_startproc
+ 514              		@ args = 0, pretend = 0, frame = 0
+ 515              		@ frame_needed = 0, uses_anonymous_args = 0
+ 516              		.loc 1 201 35 is_stmt 0 view .LVU108
+ 517 0000 10B5     		push	{r4, lr}
+ 518              	.LCFI8:
+ 519              		.cfi_def_cfa_offset 8
+ 520              		.cfi_offset 4, -8
+ 521              		.cfi_offset 14, -4
+ 522 0002 0446     		mov	r4, r0
+ 202:Inc/rfm69.h   ****   rfm69_writeReg(REG_PALEVEL, (rfm69_readReg(REG_PALEVEL) & ~0x1F) | level);
+ 523              		.loc 1 202 3 is_stmt 1 view .LVU109
+ 524              		.loc 1 202 32 is_stmt 0 view .LVU110
+ 525 0004 1120     		movs	r0, #17
+ 526              	.LVL53:
+ 527              		.loc 1 202 32 view .LVU111
+ 528 0006 FFF7FEFF 		bl	rfm69_readReg
+ 529              	.LVL54:
+ 530 000a 41B2     		sxtb	r1, r0
+ 531              		.loc 1 202 59 view .LVU112
+ 532 000c 21F01F01 		bic	r1, r1, #31
+ 533              		.loc 1 202 68 view .LVU113
+ 534 0010 2143     		orrs	r1, r1, r4
+ 535              		.loc 1 202 3 view .LVU114
+ 536 0012 C9B2     		uxtb	r1, r1
+ 537 0014 1120     		movs	r0, #17
+ 538 0016 FFF7FEFF 		bl	rfm69_writeReg
+ 539              	.LVL55:
+ 203:Inc/rfm69.h   **** }
+ 540              		.loc 1 203 1 view .LVU115
+ 541 001a 10BD     		pop	{r4, pc}
+ 542              		.cfi_endproc
+ 543              	.LFE134:
+ 545              		.section	.text.rfm69_sleep,"ax",%progbits
+ 546              		.align	1
+ 547              		.global	rfm69_sleep
+ 548              		.syntax unified
+ 549              		.thumb
+ 550              		.thumb_func
+ 551              		.fpu fpv4-sp-d16
+ 553              	rfm69_sleep:
+ 554              	.LFB135:
+ 204:Inc/rfm69.h   **** 
+ 205:Inc/rfm69.h   **** void rfm69_sleep() { rfm69_setMode(MODE_SLEEP); }
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 14
+
+
+ 555              		.loc 1 205 20 is_stmt 1 view -0
+ 556              		.cfi_startproc
+ 557              		@ args = 0, pretend = 0, frame = 0
+ 558              		@ frame_needed = 0, uses_anonymous_args = 0
+ 559 0000 08B5     		push	{r3, lr}
+ 560              	.LCFI9:
+ 561              		.cfi_def_cfa_offset 8
+ 562              		.cfi_offset 3, -8
+ 563              		.cfi_offset 14, -4
+ 564              		.loc 1 205 22 view .LVU117
+ 565 0002 0020     		movs	r0, #0
+ 566 0004 FFF7FEFF 		bl	rfm69_setMode
+ 567              	.LVL56:
+ 568              		.loc 1 205 1 is_stmt 0 view .LVU118
+ 569 0008 08BD     		pop	{r3, pc}
+ 570              		.cfi_endproc
+ 571              	.LFE135:
+ 573              		.section	.text.rfm69_receive,"ax",%progbits
+ 574              		.align	1
+ 575              		.global	rfm69_receive
+ 576              		.syntax unified
+ 577              		.thumb
+ 578              		.thumb_func
+ 579              		.fpu fpv4-sp-d16
+ 581              	rfm69_receive:
+ 582              	.LVL57:
+ 583              	.LFB136:
+ 206:Inc/rfm69.h   **** 
+ 207:Inc/rfm69.h   **** int rfm69_receive(void *ptr, int len) {
+ 584              		.loc 1 207 39 is_stmt 1 view -0
+ 585              		.cfi_startproc
+ 586              		@ args = 0, pretend = 0, frame = 0
+ 587              		@ frame_needed = 0, uses_anonymous_args = 0
+ 588              		.loc 1 207 39 is_stmt 0 view .LVU120
+ 589 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 590              	.LCFI10:
+ 591              		.cfi_def_cfa_offset 24
+ 592              		.cfi_offset 3, -24
+ 593              		.cfi_offset 4, -20
+ 594              		.cfi_offset 5, -16
+ 595              		.cfi_offset 6, -12
+ 596              		.cfi_offset 7, -8
+ 597              		.cfi_offset 14, -4
+ 208:Inc/rfm69.h   ****       if (mode != MODE_RECEIVE)
+ 598              		.loc 1 208 7 is_stmt 1 view .LVU121
+ 599              		.loc 1 208 16 is_stmt 0 view .LVU122
+ 600 0002 324B     		ldr	r3, .L55
+ 601 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 602              		.loc 1 208 10 view .LVU123
+ 603 0006 102B     		cmp	r3, #16
+ 604 0008 1BD1     		bne	.L51
+ 605 000a 0746     		mov	r7, r0
+ 606 000c 0E46     		mov	r6, r1
+ 607              	.LBB4:
+ 209:Inc/rfm69.h   ****         rfm69_setMode(MODE_RECEIVE);
+ 210:Inc/rfm69.h   ****       else {
+ 211:Inc/rfm69.h   ****         static uint8_t lastFlag;
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 15
+
+
+ 608              		.loc 1 211 9 is_stmt 1 view .LVU124
+ 212:Inc/rfm69.h   ****         if ((rfm69_readReg(REG_IRQFLAGS1) & IRQ1_RXREADY) != lastFlag) {
+ 609              		.loc 1 212 9 view .LVU125
+ 610              		.loc 1 212 14 is_stmt 0 view .LVU126
+ 611 000e 2720     		movs	r0, #39
+ 612              	.LVL58:
+ 613              		.loc 1 212 14 view .LVU127
+ 614 0010 FFF7FEFF 		bl	rfm69_readReg
+ 615              	.LVL59:
+ 616              		.loc 1 212 59 view .LVU128
+ 617 0014 2E4B     		ldr	r3, .L55+4
+ 618 0016 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 619              		.loc 1 212 12 view .LVU129
+ 620 0018 00F04000 		and	r0, r0, #64
+ 621 001c 8342     		cmp	r3, r0
+ 622 001e 04D0     		beq	.L44
+ 213:Inc/rfm69.h   ****           lastFlag ^= IRQ1_RXREADY;
+ 623              		.loc 1 213 11 is_stmt 1 view .LVU130
+ 624              		.loc 1 213 20 is_stmt 0 view .LVU131
+ 625 0020 83F04003 		eor	r3, r3, #64
+ 626 0024 2A4A     		ldr	r2, .L55+4
+ 627 0026 1370     		strb	r3, [r2]
+ 214:Inc/rfm69.h   ****           if (lastFlag) { // flag just went from 0 to 1
+ 628              		.loc 1 214 11 is_stmt 1 view .LVU132
+ 629              		.loc 1 214 14 is_stmt 0 view .LVU133
+ 630 0028 8BB9     		cbnz	r3, .L52
+ 631              	.L44:
+ 215:Inc/rfm69.h   ****             rssi = rfm69_readReg(REG_RSSIVALUE);
+ 216:Inc/rfm69.h   ****             lna = (rfm69_readReg(REG_LNAVALUE) >> 3) & 0x7;
+ 217:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 218:Inc/rfm69.h   ****             spi.enable();
+ 219:Inc/rfm69.h   ****             spi.transfer(REG_AFCMSB);
+ 220:Inc/rfm69.h   ****             afc = spi.transfer(0) << 8;
+ 221:Inc/rfm69.h   ****             afc |= spi.transfer(0);
+ 222:Inc/rfm69.h   ****             spi.disable();
+ 223:Inc/rfm69.h   ****     #else
+ 224:Inc/rfm69.h   ****             afc = rfm69_readReg(REG_AFCMSB) << 8;
+ 225:Inc/rfm69.h   ****             afc |= rfm69_readReg(REG_AFCLSB);
+ 226:Inc/rfm69.h   ****     #endif
+ 227:Inc/rfm69.h   ****           }
+ 228:Inc/rfm69.h   ****         }
+ 229:Inc/rfm69.h   **** 
+ 230:Inc/rfm69.h   ****         if (rfm69_readReg(REG_IRQFLAGS2) & IRQ2_PAYLOADREADY) {
+ 632              		.loc 1 230 9 is_stmt 1 view .LVU134
+ 633              		.loc 1 230 13 is_stmt 0 view .LVU135
+ 634 002a 2820     		movs	r0, #40
+ 635 002c FFF7FEFF 		bl	rfm69_readReg
+ 636              	.LVL60:
+ 637              		.loc 1 230 12 view .LVU136
+ 638 0030 10F0040F 		tst	r0, #4
+ 639 0034 44D0     		beq	.L48
+ 640              	.LBB5:
+ 231:Inc/rfm69.h   **** 
+ 232:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 233:Inc/rfm69.h   ****           spi.enable();
+ 234:Inc/rfm69.h   ****           spi.transfer(REG_FIFO);
+ 235:Inc/rfm69.h   ****           int count = spi.transfer(0);
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 16
+
+
+ 236:Inc/rfm69.h   ****           for (int i = 0; i < count; ++i) {
+ 237:Inc/rfm69.h   ****             uint8_t v = spi.transfer(0);
+ 238:Inc/rfm69.h   ****             if (i < len)
+ 239:Inc/rfm69.h   ****               ((uint8_t *)ptr)[i] = v;
+ 240:Inc/rfm69.h   ****           }
+ 241:Inc/rfm69.h   ****           spi.disable();
+ 242:Inc/rfm69.h   ****     #else
+ 243:Inc/rfm69.h   ****           int count = rfm69_readReg(REG_FIFO);
+ 641              		.loc 1 243 11 is_stmt 1 view .LVU137
+ 642              		.loc 1 243 23 is_stmt 0 view .LVU138
+ 643 0036 0020     		movs	r0, #0
+ 644 0038 FFF7FEFF 		bl	rfm69_readReg
+ 645              	.LVL61:
+ 646              		.loc 1 243 15 view .LVU139
+ 647 003c 0546     		mov	r5, r0
+ 648              	.LVL62:
+ 244:Inc/rfm69.h   ****           for (int i = 0; i < count; ++i) {
+ 649              		.loc 1 244 11 is_stmt 1 view .LVU140
+ 650              	.LBB6:
+ 651              		.loc 1 244 16 view .LVU141
+ 652              		.loc 1 244 20 is_stmt 0 view .LVU142
+ 653 003e 0024     		movs	r4, #0
+ 654              		.loc 1 244 11 view .LVU143
+ 655 0040 20E0     		b	.L45
+ 656              	.LVL63:
+ 657              	.L51:
+ 658              		.loc 1 244 11 view .LVU144
+ 659              	.LBE6:
+ 660              	.LBE5:
+ 661              	.LBE4:
+ 209:Inc/rfm69.h   ****       else {
+ 662              		.loc 1 209 9 is_stmt 1 view .LVU145
+ 663 0042 1020     		movs	r0, #16
+ 664              	.LVL64:
+ 209:Inc/rfm69.h   ****       else {
+ 665              		.loc 1 209 9 is_stmt 0 view .LVU146
+ 666 0044 FFF7FEFF 		bl	rfm69_setMode
+ 667              	.LVL65:
+ 245:Inc/rfm69.h   ****             uint8_t v = rfm69_readReg(REG_FIFO);
+ 246:Inc/rfm69.h   ****             if (i < len)
+ 247:Inc/rfm69.h   ****               ((uint8_t *)ptr)[i] = v;
+ 248:Inc/rfm69.h   ****           }
+ 249:Inc/rfm69.h   ****     #endif
+ 250:Inc/rfm69.h   **** 
+ 251:Inc/rfm69.h   ****           // only accept packets intended for us, or broadcasts
+ 252:Inc/rfm69.h   ****           // ... or any packet if we're the special catch-all node
+ 253:Inc/rfm69.h   ****           uint8_t dest = *(uint8_t *)ptr;
+ 254:Inc/rfm69.h   ****           if ((dest & 0xC0) == parity) {
+ 255:Inc/rfm69.h   ****             uint8_t destId = dest & 0x3F;
+ 256:Inc/rfm69.h   ****             if (destId == myId || destId == 0 || myId == 63)
+ 257:Inc/rfm69.h   ****               return count;
+ 258:Inc/rfm69.h   ****           }
+ 259:Inc/rfm69.h   ****         }
+ 260:Inc/rfm69.h   ****       }
+ 261:Inc/rfm69.h   ****       return -1;
+ 668              		.loc 1 261 14 view .LVU147
+ 669 0048 4FF0FF35 		mov	r5, #-1
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 17
+
+
+ 670 004c 33E0     		b	.L41
+ 671              	.LVL66:
+ 672              	.L52:
+ 673              	.LBB11:
+ 215:Inc/rfm69.h   ****             lna = (rfm69_readReg(REG_LNAVALUE) >> 3) & 0x7;
+ 674              		.loc 1 215 13 is_stmt 1 view .LVU148
+ 215:Inc/rfm69.h   ****             lna = (rfm69_readReg(REG_LNAVALUE) >> 3) & 0x7;
+ 675              		.loc 1 215 20 is_stmt 0 view .LVU149
+ 676 004e 2420     		movs	r0, #36
+ 677 0050 FFF7FEFF 		bl	rfm69_readReg
+ 678              	.LVL67:
+ 215:Inc/rfm69.h   ****             lna = (rfm69_readReg(REG_LNAVALUE) >> 3) & 0x7;
+ 679              		.loc 1 215 18 view .LVU150
+ 680 0054 1F4B     		ldr	r3, .L55+8
+ 681 0056 1870     		strb	r0, [r3]
+ 216:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 682              		.loc 1 216 13 is_stmt 1 view .LVU151
+ 216:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 683              		.loc 1 216 20 is_stmt 0 view .LVU152
+ 684 0058 1820     		movs	r0, #24
+ 685 005a FFF7FEFF 		bl	rfm69_readReg
+ 686              	.LVL68:
+ 216:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 687              		.loc 1 216 54 view .LVU153
+ 688 005e C0F3C200 		ubfx	r0, r0, #3, #3
+ 216:Inc/rfm69.h   ****     #if RF69_SPI_BULK
+ 689              		.loc 1 216 17 view .LVU154
+ 690 0062 1D4B     		ldr	r3, .L55+12
+ 691 0064 1870     		strb	r0, [r3]
+ 224:Inc/rfm69.h   ****             afc |= rfm69_readReg(REG_AFCLSB);
+ 692              		.loc 1 224 13 is_stmt 1 view .LVU155
+ 224:Inc/rfm69.h   ****             afc |= rfm69_readReg(REG_AFCLSB);
+ 693              		.loc 1 224 19 is_stmt 0 view .LVU156
+ 694 0066 1F20     		movs	r0, #31
+ 695 0068 FFF7FEFF 		bl	rfm69_readReg
+ 696              	.LVL69:
+ 224:Inc/rfm69.h   ****             afc |= rfm69_readReg(REG_AFCLSB);
+ 697              		.loc 1 224 45 view .LVU157
+ 698 006c 0002     		lsls	r0, r0, #8
+ 224:Inc/rfm69.h   ****             afc |= rfm69_readReg(REG_AFCLSB);
+ 699              		.loc 1 224 17 view .LVU158
+ 700 006e 1B4C     		ldr	r4, .L55+16
+ 701 0070 2080     		strh	r0, [r4]	@ movhi
+ 225:Inc/rfm69.h   ****     #endif
+ 702              		.loc 1 225 13 is_stmt 1 view .LVU159
+ 225:Inc/rfm69.h   ****     #endif
+ 703              		.loc 1 225 20 is_stmt 0 view .LVU160
+ 704 0072 2020     		movs	r0, #32
+ 705 0074 FFF7FEFF 		bl	rfm69_readReg
+ 706              	.LVL70:
+ 707 0078 00B2     		sxth	r0, r0
+ 225:Inc/rfm69.h   ****     #endif
+ 708              		.loc 1 225 17 view .LVU161
+ 709 007a 2388     		ldrh	r3, [r4]
+ 710 007c 1843     		orrs	r0, r0, r3
+ 711 007e 2080     		strh	r0, [r4]	@ movhi
+ 712 0080 D3E7     		b	.L44
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 18
+
+
+ 713              	.LVL71:
+ 714              	.L46:
+ 715              	.LBB10:
+ 716              	.LBB8:
+ 244:Inc/rfm69.h   ****             uint8_t v = rfm69_readReg(REG_FIFO);
+ 717              		.loc 1 244 38 discriminator 2 view .LVU162
+ 718 0082 0134     		adds	r4, r4, #1
+ 719              	.LVL72:
+ 720              	.L45:
+ 244:Inc/rfm69.h   ****             uint8_t v = rfm69_readReg(REG_FIFO);
+ 721              		.loc 1 244 11 discriminator 1 view .LVU163
+ 722 0084 AC42     		cmp	r4, r5
+ 723 0086 06DA     		bge	.L53
+ 724              	.LBB7:
+ 245:Inc/rfm69.h   ****             if (i < len)
+ 725              		.loc 1 245 13 is_stmt 1 view .LVU164
+ 245:Inc/rfm69.h   ****             if (i < len)
+ 726              		.loc 1 245 25 is_stmt 0 view .LVU165
+ 727 0088 0020     		movs	r0, #0
+ 728 008a FFF7FEFF 		bl	rfm69_readReg
+ 729              	.LVL73:
+ 246:Inc/rfm69.h   ****               ((uint8_t *)ptr)[i] = v;
+ 730              		.loc 1 246 13 is_stmt 1 view .LVU166
+ 246:Inc/rfm69.h   ****               ((uint8_t *)ptr)[i] = v;
+ 731              		.loc 1 246 16 is_stmt 0 view .LVU167
+ 732 008e B442     		cmp	r4, r6
+ 733 0090 F7DA     		bge	.L46
+ 247:Inc/rfm69.h   ****           }
+ 734              		.loc 1 247 15 is_stmt 1 view .LVU168
+ 247:Inc/rfm69.h   ****           }
+ 735              		.loc 1 247 35 is_stmt 0 view .LVU169
+ 736 0092 3855     		strb	r0, [r7, r4]
+ 737 0094 F5E7     		b	.L46
+ 738              	.LVL74:
+ 739              	.L53:
+ 247:Inc/rfm69.h   ****           }
+ 740              		.loc 1 247 35 view .LVU170
+ 741              	.LBE7:
+ 742              	.LBE8:
+ 253:Inc/rfm69.h   ****           if ((dest & 0xC0) == parity) {
+ 743              		.loc 1 253 11 is_stmt 1 view .LVU171
+ 253:Inc/rfm69.h   ****           if ((dest & 0xC0) == parity) {
+ 744              		.loc 1 253 19 is_stmt 0 view .LVU172
+ 745 0096 3B78     		ldrb	r3, [r7]	@ zero_extendqisi2
+ 746              	.LVL75:
+ 254:Inc/rfm69.h   ****             uint8_t destId = dest & 0x3F;
+ 747              		.loc 1 254 11 is_stmt 1 view .LVU173
+ 254:Inc/rfm69.h   ****             uint8_t destId = dest & 0x3F;
+ 748              		.loc 1 254 29 is_stmt 0 view .LVU174
+ 749 0098 114A     		ldr	r2, .L55+20
+ 750 009a 1178     		ldrb	r1, [r2]	@ zero_extendqisi2
+ 254:Inc/rfm69.h   ****             uint8_t destId = dest & 0x3F;
+ 751              		.loc 1 254 14 view .LVU175
+ 752 009c 03F0C002 		and	r2, r3, #192
+ 753 00a0 9142     		cmp	r1, r2
+ 754 00a2 10D1     		bne	.L49
+ 755              	.LBB9:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 19
+
+
+ 255:Inc/rfm69.h   ****             if (destId == myId || destId == 0 || myId == 63)
+ 756              		.loc 1 255 13 is_stmt 1 view .LVU176
+ 255:Inc/rfm69.h   ****             if (destId == myId || destId == 0 || myId == 63)
+ 757              		.loc 1 255 21 is_stmt 0 view .LVU177
+ 758 00a4 03F03F03 		and	r3, r3, #63
+ 759              	.LVL76:
+ 256:Inc/rfm69.h   ****               return count;
+ 760              		.loc 1 256 13 is_stmt 1 view .LVU178
+ 256:Inc/rfm69.h   ****               return count;
+ 761              		.loc 1 256 24 is_stmt 0 view .LVU179
+ 762 00a8 0E4A     		ldr	r2, .L55+24
+ 763 00aa 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 256:Inc/rfm69.h   ****               return count;
+ 764              		.loc 1 256 16 view .LVU180
+ 765 00ac 9A42     		cmp	r2, r3
+ 766 00ae 02D0     		beq	.L41
+ 256:Inc/rfm69.h   ****               return count;
+ 767              		.loc 1 256 32 discriminator 1 view .LVU181
+ 768 00b0 0BB1     		cbz	r3, .L41
+ 256:Inc/rfm69.h   ****               return count;
+ 769              		.loc 1 256 47 discriminator 2 view .LVU182
+ 770 00b2 3F2A     		cmp	r2, #63
+ 771 00b4 01D1     		bne	.L54
+ 772              	.LVL77:
+ 773              	.L41:
+ 256:Inc/rfm69.h   ****               return count;
+ 774              		.loc 1 256 47 discriminator 2 view .LVU183
+ 775              	.LBE9:
+ 776              	.LBE10:
+ 777              	.LBE11:
+ 262:Inc/rfm69.h   **** }
+ 778              		.loc 1 262 1 view .LVU184
+ 779 00b6 2846     		mov	r0, r5
+ 780 00b8 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 781              	.LVL78:
+ 782              	.L54:
+ 261:Inc/rfm69.h   **** }
+ 783              		.loc 1 261 14 view .LVU185
+ 784 00ba 4FF0FF35 		mov	r5, #-1
+ 785              	.LVL79:
+ 261:Inc/rfm69.h   **** }
+ 786              		.loc 1 261 14 view .LVU186
+ 787 00be FAE7     		b	.L41
+ 788              	.LVL80:
+ 789              	.L48:
+ 261:Inc/rfm69.h   **** }
+ 790              		.loc 1 261 14 view .LVU187
+ 791 00c0 4FF0FF35 		mov	r5, #-1
+ 792 00c4 F7E7     		b	.L41
+ 793              	.LVL81:
+ 794              	.L49:
+ 261:Inc/rfm69.h   **** }
+ 795              		.loc 1 261 14 view .LVU188
+ 796 00c6 4FF0FF35 		mov	r5, #-1
+ 797              	.LVL82:
+ 261:Inc/rfm69.h   **** }
+ 798              		.loc 1 261 14 view .LVU189
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 20
+
+
+ 799 00ca F4E7     		b	.L41
+ 800              	.L56:
+ 801              		.align	2
+ 802              	.L55:
+ 803 00cc 00000000 		.word	mode
+ 804 00d0 00000000 		.word	.LANCHOR1
+ 805 00d4 00000000 		.word	rssi
+ 806 00d8 00000000 		.word	lna
+ 807 00dc 00000000 		.word	afc
+ 808 00e0 00000000 		.word	parity
+ 809 00e4 00000000 		.word	myId
+ 810              		.cfi_endproc
+ 811              	.LFE136:
+ 813              		.section	.text.rfm69_send,"ax",%progbits
+ 814              		.align	1
+ 815              		.global	rfm69_send
+ 816              		.syntax unified
+ 817              		.thumb
+ 818              		.thumb_func
+ 819              		.fpu fpv4-sp-d16
+ 821              	rfm69_send:
+ 822              	.LVL83:
+ 823              	.LFB137:
+ 263:Inc/rfm69.h   **** 
+ 264:Inc/rfm69.h   **** void rfm69_send(uint8_t header, const void *ptr, int len) {
+ 824              		.loc 1 264 59 is_stmt 1 view -0
+ 825              		.cfi_startproc
+ 826              		@ args = 0, pretend = 0, frame = 0
+ 827              		@ frame_needed = 0, uses_anonymous_args = 0
+ 828              		.loc 1 264 59 is_stmt 0 view .LVU191
+ 829 0000 70B5     		push	{r4, r5, r6, lr}
+ 830              	.LCFI11:
+ 831              		.cfi_def_cfa_offset 16
+ 832              		.cfi_offset 4, -16
+ 833              		.cfi_offset 5, -12
+ 834              		.cfi_offset 6, -8
+ 835              		.cfi_offset 14, -4
+ 836 0002 0446     		mov	r4, r0
+ 837 0004 0E46     		mov	r6, r1
+ 838 0006 1546     		mov	r5, r2
+ 265:Inc/rfm69.h   ****   rfm69_setMode(MODE_SLEEP);
+ 839              		.loc 1 265 3 is_stmt 1 view .LVU192
+ 840 0008 0020     		movs	r0, #0
+ 841              	.LVL84:
+ 842              		.loc 1 265 3 is_stmt 0 view .LVU193
+ 843 000a FFF7FEFF 		bl	rfm69_setMode
+ 844              	.LVL85:
+ 266:Inc/rfm69.h   **** 
+ 267:Inc/rfm69.h   **** #if RF69_SPI_BULK
+ 268:Inc/rfm69.h   ****   spi.enable();
+ 269:Inc/rfm69.h   ****   spi.transfer(REG_FIFO | 0x80);
+ 270:Inc/rfm69.h   ****   spi.transfer(len + 2);
+ 271:Inc/rfm69.h   ****   spi.transfer((header & 0x3F) | parity);
+ 272:Inc/rfm69.h   ****   spi.transfer((header & 0xC0) | myId);
+ 273:Inc/rfm69.h   ****   for (int i = 0; i < len; ++i)
+ 274:Inc/rfm69.h   ****     spi.transfer(((const uint8_t *)ptr)[i]);
+ 275:Inc/rfm69.h   ****   spi.disable();
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 21
+
+
+ 276:Inc/rfm69.h   **** #else
+ 277:Inc/rfm69.h   ****   rfm69_writeReg(REG_FIFO, len + 2);
+ 845              		.loc 1 277 3 is_stmt 1 view .LVU194
+ 846 000e A91C     		adds	r1, r5, #2
+ 847 0010 C9B2     		uxtb	r1, r1
+ 848 0012 0020     		movs	r0, #0
+ 849 0014 FFF7FEFF 		bl	rfm69_writeReg
+ 850              	.LVL86:
+ 278:Inc/rfm69.h   ****   rfm69_writeReg(REG_FIFO, (header & 0x3F) | parity);
+ 851              		.loc 1 278 3 view .LVU195
+ 852              		.loc 1 278 36 is_stmt 0 view .LVU196
+ 853 0018 64B2     		sxtb	r4, r4
+ 854 001a 04F03F01 		and	r1, r4, #63
+ 855              		.loc 1 278 44 view .LVU197
+ 856 001e 134B     		ldr	r3, .L64
+ 857 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 858              		.loc 1 278 3 view .LVU198
+ 859 0022 1943     		orrs	r1, r1, r3
+ 860 0024 0020     		movs	r0, #0
+ 861 0026 FFF7FEFF 		bl	rfm69_writeReg
+ 862              	.LVL87:
+ 279:Inc/rfm69.h   ****   rfm69_writeReg(REG_FIFO, (header & 0xC0) | myId);
+ 863              		.loc 1 279 3 is_stmt 1 view .LVU199
+ 864              		.loc 1 279 36 is_stmt 0 view .LVU200
+ 865 002a 24F03F04 		bic	r4, r4, #63
+ 866              		.loc 1 279 44 view .LVU201
+ 867 002e 104B     		ldr	r3, .L64+4
+ 868 0030 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 869 0032 2143     		orrs	r1, r1, r4
+ 870              		.loc 1 279 3 view .LVU202
+ 871 0034 C9B2     		uxtb	r1, r1
+ 872 0036 0020     		movs	r0, #0
+ 873 0038 FFF7FEFF 		bl	rfm69_writeReg
+ 874              	.LVL88:
+ 280:Inc/rfm69.h   ****   for (int i = 0; i < len; ++i)
+ 875              		.loc 1 280 3 is_stmt 1 view .LVU203
+ 876              	.LBB12:
+ 877              		.loc 1 280 8 view .LVU204
+ 878              		.loc 1 280 12 is_stmt 0 view .LVU205
+ 879 003c 0024     		movs	r4, #0
+ 880              	.LVL89:
+ 881              	.L58:
+ 882              		.loc 1 280 3 discriminator 1 view .LVU206
+ 883 003e AC42     		cmp	r4, r5
+ 884 0040 05DA     		bge	.L63
+ 281:Inc/rfm69.h   ****     rfm69_writeReg(REG_FIFO, ((const uint8_t *)ptr)[i]);
+ 885              		.loc 1 281 5 is_stmt 1 discriminator 3 view .LVU207
+ 886 0042 315D     		ldrb	r1, [r6, r4]	@ zero_extendqisi2
+ 887 0044 0020     		movs	r0, #0
+ 888 0046 FFF7FEFF 		bl	rfm69_writeReg
+ 889              	.LVL90:
+ 280:Inc/rfm69.h   ****   for (int i = 0; i < len; ++i)
+ 890              		.loc 1 280 28 is_stmt 0 discriminator 3 view .LVU208
+ 891 004a 0134     		adds	r4, r4, #1
+ 892              	.LVL91:
+ 280:Inc/rfm69.h   ****   for (int i = 0; i < len; ++i)
+ 893              		.loc 1 280 28 discriminator 3 view .LVU209
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 22
+
+
+ 894 004c F7E7     		b	.L58
+ 895              	.L63:
+ 280:Inc/rfm69.h   ****   for (int i = 0; i < len; ++i)
+ 896              		.loc 1 280 28 discriminator 3 view .LVU210
+ 897              	.LBE12:
+ 282:Inc/rfm69.h   **** #endif
+ 283:Inc/rfm69.h   **** 
+ 284:Inc/rfm69.h   ****   rfm69_setMode(MODE_TRANSMIT);
+ 898              		.loc 1 284 3 is_stmt 1 view .LVU211
+ 899 004e 0C20     		movs	r0, #12
+ 900 0050 FFF7FEFF 		bl	rfm69_setMode
+ 901              	.LVL92:
+ 285:Inc/rfm69.h   ****   while ((rfm69_readReg(REG_IRQFLAGS2) & IRQ2_PACKETSENT) == 0)
+ 902              		.loc 1 285 3 view .LVU212
+ 903              		.loc 1 285 9 is_stmt 0 view .LVU213
+ 904 0054 02E0     		b	.L60
+ 905              	.L61:
+ 286:Inc/rfm69.h   **** 
+ 287:Inc/rfm69.h   **** 
+ 288:Inc/rfm69.h   ****   rfm69_setMode(MODE_STANDBY);
+ 906              		.loc 1 288 3 is_stmt 1 view .LVU214
+ 907 0056 0420     		movs	r0, #4
+ 908 0058 FFF7FEFF 		bl	rfm69_setMode
+ 909              	.LVL93:
+ 910              	.L60:
+ 285:Inc/rfm69.h   ****   while ((rfm69_readReg(REG_IRQFLAGS2) & IRQ2_PACKETSENT) == 0)
+ 911              		.loc 1 285 11 is_stmt 0 view .LVU215
+ 912 005c 2820     		movs	r0, #40
+ 913 005e FFF7FEFF 		bl	rfm69_readReg
+ 914              	.LVL94:
+ 285:Inc/rfm69.h   ****   while ((rfm69_readReg(REG_IRQFLAGS2) & IRQ2_PACKETSENT) == 0)
+ 915              		.loc 1 285 9 view .LVU216
+ 916 0062 10F0080F 		tst	r0, #8
+ 917 0066 F6D0     		beq	.L61
+ 289:Inc/rfm69.h   **** }
+ 918              		.loc 1 289 1 view .LVU217
+ 919 0068 70BD     		pop	{r4, r5, r6, pc}
+ 920              	.LVL95:
+ 921              	.L65:
+ 922              		.loc 1 289 1 view .LVU218
+ 923 006a 00BF     		.align	2
+ 924              	.L64:
+ 925 006c 00000000 		.word	parity
+ 926 0070 00000000 		.word	myId
+ 927              		.cfi_endproc
+ 928              	.LFE137:
+ 930              		.section	.text.radio_setup,"ax",%progbits
+ 931              		.align	1
+ 932              		.global	radio_setup
+ 933              		.syntax unified
+ 934              		.thumb
+ 935              		.thumb_func
+ 936              		.fpu fpv4-sp-d16
+ 938              	radio_setup:
+ 939              	.LFB138:
+ 940              		.file 2 "Src/main.c"
+   1:Src/main.c    **** 
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 23
+
+
+   2:Src/main.c    **** /**
+   3:Src/main.c    ****   ******************************************************************************
+   4:Src/main.c    ****   * @file           : main.c
+   5:Src/main.c    ****   * @brief          : Main program body
+   6:Src/main.c    ****   ******************************************************************************
+   7:Src/main.c    ****   ** This notice applies to any and all portions of this file
+   8:Src/main.c    ****   * that are not between comment pairs USER CODE BEGIN and
+   9:Src/main.c    ****   * USER CODE END. Other portions of this file, whether
+  10:Src/main.c    ****   * inserted by the user or by software development tools
+  11:Src/main.c    ****   * are owned by their respective copyright owners.
+  12:Src/main.c    ****   *
+  13:Src/main.c    ****   * COPYRIGHT(c) 2019 STMicroelectronics
+  14:Src/main.c    ****   *
+  15:Src/main.c    ****   * Redistribution and use in source and binary forms, with or without modification,
+  16:Src/main.c    ****   * are permitted provided that the following conditions are met:
+  17:Src/main.c    ****   *   1. Redistributions of source code must retain the above copyright notice,
+  18:Src/main.c    ****   *      this list of conditions and the following disclaimer.
+  19:Src/main.c    ****   *   2. Redistributions in binary form must reproduce the above copyright notice,
+  20:Src/main.c    ****   *      this list of conditions and the following disclaimer in the documentation
+  21:Src/main.c    ****   *      and/or other materials provided with the distribution.
+  22:Src/main.c    ****   *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  23:Src/main.c    ****   *      may be used to endorse or promote products derived from this software
+  24:Src/main.c    ****   *      without specific prior written permission.
+  25:Src/main.c    ****   *
+  26:Src/main.c    ****   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  27:Src/main.c    ****   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  28:Src/main.c    ****   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  29:Src/main.c    ****   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  30:Src/main.c    ****   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  31:Src/main.c    ****   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  32:Src/main.c    ****   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  33:Src/main.c    ****   * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  34:Src/main.c    ****   * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  35:Src/main.c    ****   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  36:Src/main.c    ****   *
+  37:Src/main.c    ****   ******************************************************************************
+  38:Src/main.c    ****   */
+  39:Src/main.c    **** /* Includes ------------------------------------------------------------------*/
+  40:Src/main.c    **** #include "main.h"
+  41:Src/main.c    **** #include "stm32f3xx_hal.h"
+  42:Src/main.c    **** #include "spi.h"
+  43:Src/main.c    **** #include "usart.h"
+  44:Src/main.c    **** #include "gpio.h"
+  45:Src/main.c    **** 
+  46:Src/main.c    **** /* USER CODE BEGIN Includes */
+  47:Src/main.c    **** #include <stdio.h>
+  48:Src/main.c    **** #include <stdbool.h>
+  49:Src/main.c    **** #include "spi.h"
+  50:Src/main.c    **** #include "rfm69.h"
+  51:Src/main.c    **** 
+  52:Src/main.c    **** /* USER CODE END Includes */
+  53:Src/main.c    **** 
+  54:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
+  55:Src/main.c    **** 
+  56:Src/main.c    **** /* USER CODE BEGIN PV */
+  57:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
+  58:Src/main.c    **** 
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 24
+
+
+  59:Src/main.c    **** 
+  60:Src/main.c    **** 
+  61:Src/main.c    **** // defined in main.cpp
+  62:Src/main.c    **** 
+  63:Src/main.c    **** 
+  64:Src/main.c    **** uint8_t rxBuf[64];
+  65:Src/main.c    **** uint8_t txBuf[62];
+  66:Src/main.c    **** uint16_t txCnt = 0;
+  67:Src/main.c    **** 
+  68:Src/main.c    **** const int rf_freq = 433;
+  69:Src/main.c    **** const int rf_group = 210;
+  70:Src/main.c    **** const int rf_nodeid = 1;
+  71:Src/main.c    **** 
+  72:Src/main.c    **** const bool verbose = true;
+  73:Src/main.c    **** 
+  74:Src/main.c    **** 
+  75:Src/main.c    **** /* USER CODE END PV */
+  76:Src/main.c    **** 
+  77:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  78:Src/main.c    **** void SystemClock_Config(void);
+  79:Src/main.c    **** 
+  80:Src/main.c    **** /* USER CODE BEGIN PFP */
+  81:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  82:Src/main.c    **** bool radio_setup(void);
+  83:Src/main.c    **** void radio_loop(void);
+  84:Src/main.c    **** /* USER CODE END PFP */
+  85:Src/main.c    **** 
+  86:Src/main.c    **** /* USER CODE BEGIN 0 */
+  87:Src/main.c    **** bool radio_setup() {
+ 941              		.loc 2 87 20 is_stmt 1 view -0
+ 942              		.cfi_startproc
+ 943              		@ args = 0, pretend = 0, frame = 0
+ 944              		@ frame_needed = 0, uses_anonymous_args = 0
+ 945 0000 08B5     		push	{r3, lr}
+ 946              	.LCFI12:
+ 947              		.cfi_def_cfa_offset 8
+ 948              		.cfi_offset 3, -8
+ 949              		.cfi_offset 14, -4
+  88:Src/main.c    **** 
+  89:Src/main.c    ****     printf("\n[radio]\n");
+ 950              		.loc 2 89 5 view .LVU220
+ 951 0002 1148     		ldr	r0, .L70
+ 952 0004 FFF7FEFF 		bl	puts
+ 953              	.LVL96:
+  90:Src/main.c    **** 
+  91:Src/main.c    ****     rfm69_init(rf_nodeid, rf_group, rf_freq);
+ 954              		.loc 2 91 5 view .LVU221
+ 955 0008 40F2B112 		movw	r2, #433
+ 956 000c D221     		movs	r1, #210
+ 957 000e 0120     		movs	r0, #1
+ 958 0010 FFF7FEFF 		bl	rfm69_init
+ 959              	.LVL97:
+  92:Src/main.c    ****     rfm69_encrypt(0);
+ 960              		.loc 2 92 5 view .LVU222
+ 961 0014 0020     		movs	r0, #0
+ 962 0016 FFF7FEFF 		bl	rfm69_encrypt
+ 963              	.LVL98:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 25
+
+
+  93:Src/main.c    ****     rfm69_txPower(16); // 0 = min .. 31 = max
+ 964              		.loc 2 93 5 view .LVU223
+ 965 001a 1020     		movs	r0, #16
+ 966 001c FFF7FEFF 		bl	rfm69_txPower
+ 967              	.LVL99:
+  94:Src/main.c    **** 
+  95:Src/main.c    ****     for (int i = 0; i < (int) sizeof txBuf; ++i)
+ 968              		.loc 2 95 5 view .LVU224
+ 969              	.LBB13:
+ 970              		.loc 2 95 10 view .LVU225
+ 971              		.loc 2 95 14 is_stmt 0 view .LVU226
+ 972 0020 0023     		movs	r3, #0
+ 973              		.loc 2 95 5 view .LVU227
+ 974 0022 02E0     		b	.L67
+ 975              	.LVL100:
+ 976              	.L68:
+  96:Src/main.c    ****         txBuf[i] = i;
+ 977              		.loc 2 96 9 is_stmt 1 discriminator 3 view .LVU228
+ 978              		.loc 2 96 18 is_stmt 0 discriminator 3 view .LVU229
+ 979 0024 094A     		ldr	r2, .L70+4
+ 980 0026 D354     		strb	r3, [r2, r3]
+  95:Src/main.c    ****         txBuf[i] = i;
+ 981              		.loc 2 95 45 discriminator 3 view .LVU230
+ 982 0028 0133     		adds	r3, r3, #1
+ 983              	.LVL101:
+ 984              	.L67:
+  95:Src/main.c    ****         txBuf[i] = i;
+ 985              		.loc 2 95 5 discriminator 1 view .LVU231
+ 986 002a 3D2B     		cmp	r3, #61
+ 987 002c FADD     		ble	.L68
+ 988              	.LBE13:
+  97:Src/main.c    **** 
+  98:Src/main.c    ****     printf("  Enter 't' to broadcast a test packet as node %d.\n", rf_nodeid);
+ 989              		.loc 2 98 5 is_stmt 1 view .LVU232
+ 990 002e 0121     		movs	r1, #1
+ 991 0030 0748     		ldr	r0, .L70+8
+ 992 0032 FFF7FEFF 		bl	printf
+ 993              	.LVL102:
+  99:Src/main.c    ****     printf("  Listening for packets on %dMHz, group %d ...\n\n", rf_freq, rf_group);
+ 994              		.loc 2 99 5 view .LVU233
+ 995 0036 D222     		movs	r2, #210
+ 996 0038 40F2B111 		movw	r1, #433
+ 997 003c 0548     		ldr	r0, .L70+12
+ 998 003e FFF7FEFF 		bl	printf
+ 999              	.LVL103:
+ 100:Src/main.c    ****     return true;
+ 1000              		.loc 2 100 5 view .LVU234
+ 101:Src/main.c    **** }
+ 1001              		.loc 2 101 1 is_stmt 0 view .LVU235
+ 1002 0042 0120     		movs	r0, #1
+ 1003 0044 08BD     		pop	{r3, pc}
+ 1004              	.L71:
+ 1005 0046 00BF     		.align	2
+ 1006              	.L70:
+ 1007 0048 00000000 		.word	.LC0
+ 1008 004c 00000000 		.word	txBuf
+ 1009 0050 0C000000 		.word	.LC1
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 26
+
+
+ 1010 0054 40000000 		.word	.LC2
+ 1011              		.cfi_endproc
+ 1012              	.LFE138:
+ 1014              		.global	__aeabi_i2d
+ 1015              		.global	__aeabi_dmul
+ 1016              		.section	.text.radio_loop,"ax",%progbits
+ 1017              		.align	1
+ 1018              		.global	radio_loop
+ 1019              		.syntax unified
+ 1020              		.thumb
+ 1021              		.thumb_func
+ 1022              		.fpu fpv4-sp-d16
+ 1024              	radio_loop:
+ 1025              	.LFB139:
+ 102:Src/main.c    **** 
+ 103:Src/main.c    **** extern int16_t afc;
+ 104:Src/main.c    **** extern uint8_t rssi;
+ 105:Src/main.c    **** extern uint8_t lna;
+ 106:Src/main.c    **** void radio_loop() {
+ 1026              		.loc 2 106 19 is_stmt 1 view -0
+ 1027              		.cfi_startproc
+ 1028              		@ args = 0, pretend = 0, frame = 0
+ 1029              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1030 0000 30B5     		push	{r4, r5, lr}
+ 1031              	.LCFI13:
+ 1032              		.cfi_def_cfa_offset 12
+ 1033              		.cfi_offset 4, -12
+ 1034              		.cfi_offset 5, -8
+ 1035              		.cfi_offset 14, -4
+ 1036 0002 87B0     		sub	sp, sp, #28
+ 1037              	.LCFI14:
+ 1038              		.cfi_def_cfa_offset 40
+ 107:Src/main.c    ****     /*
+ 108:Src/main.c    ****     if (serial_getc() == 't') {
+ 109:Src/main.c    ****         printf("  Broadcasting %d-byte test packet\n", txCnt);
+ 110:Src/main.c    ****         rf.send(0, txBuf, txCnt);
+ 111:Src/main.c    ****         txCnt = (txCnt + 1) % sizeof txBuf;
+ 112:Src/main.c    ****     }
+ 113:Src/main.c    ****     */
+ 114:Src/main.c    **** printf("loopy");
+ 1039              		.loc 2 114 1 view .LVU237
+ 1040 0004 2448     		ldr	r0, .L82
+ 1041 0006 FFF7FEFF 		bl	printf
+ 1042              	.LVL104:
+ 115:Src/main.c    ****     int len = rfm69_receive(rxBuf, sizeof(rxBuf));
+ 1043              		.loc 2 115 5 view .LVU238
+ 1044              		.loc 2 115 15 is_stmt 0 view .LVU239
+ 1045 000a 4021     		movs	r1, #64
+ 1046 000c 2348     		ldr	r0, .L82+4
+ 1047 000e FFF7FEFF 		bl	rfm69_receive
+ 1048              	.LVL105:
+ 116:Src/main.c    ****     if (len >= 0) {
+ 1049              		.loc 2 116 5 is_stmt 1 view .LVU240
+ 1050              		.loc 2 116 8 is_stmt 0 view .LVU241
+ 1051 0012 051E     		subs	r5, r0, #0
+ 1052 0014 01DA     		bge	.L79
+ 1053              	.LVL106:
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 27
+
+
+ 1054              	.L72:
+ 117:Src/main.c    ****         printf("rf69 %04x%02x%02x%02x%04x%02x%02x%02x ",
+ 118:Src/main.c    ****                 rf_freq, rf_group, rssi, lna, afc,
+ 119:Src/main.c    ****                 rxBuf[0], rxBuf[1], len - 2);
+ 120:Src/main.c    ****         for (int i = 2; i < len; ++i)
+ 121:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 122:Src/main.c    ****         const char* sep = afc < 0 ? "" : "+";
+ 123:Src/main.c    ****         if (verbose)
+ 124:Src/main.c    ****             printf("  (%g%s%d:%d)", rssi * 0.5, sep, afc, lna);
+ 125:Src/main.c    ****         putchar('\n');
+ 126:Src/main.c    ****     }
+ 127:Src/main.c    **** }
+ 1055              		.loc 2 127 1 view .LVU242
+ 1056 0016 07B0     		add	sp, sp, #28
+ 1057              	.LCFI15:
+ 1058              		.cfi_remember_state
+ 1059              		.cfi_def_cfa_offset 12
+ 1060              		@ sp needed
+ 1061 0018 30BD     		pop	{r4, r5, pc}
+ 1062              	.LVL107:
+ 1063              	.L79:
+ 1064              	.LCFI16:
+ 1065              		.cfi_restore_state
+ 1066              	.LBB14:
+ 117:Src/main.c    ****         printf("rf69 %04x%02x%02x%02x%04x%02x%02x%02x ",
+ 1067              		.loc 2 117 9 is_stmt 1 view .LVU243
+ 119:Src/main.c    ****         for (int i = 2; i < len; ++i)
+ 1068              		.loc 2 119 22 is_stmt 0 view .LVU244
+ 1069 001a 204B     		ldr	r3, .L82+4
+ 1070 001c 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 119:Src/main.c    ****         for (int i = 2; i < len; ++i)
+ 1071              		.loc 2 119 32 view .LVU245
+ 1072 001e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 117:Src/main.c    ****         printf("rf69 %04x%02x%02x%02x%04x%02x%02x%02x ",
+ 1073              		.loc 2 117 9 view .LVU246
+ 1074 0020 A91E     		subs	r1, r5, #2
+ 1075 0022 0491     		str	r1, [sp, #16]
+ 1076 0024 0393     		str	r3, [sp, #12]
+ 1077 0026 0292     		str	r2, [sp, #8]
+ 1078 0028 1D4B     		ldr	r3, .L82+8
+ 1079 002a B3F90030 		ldrsh	r3, [r3]
+ 1080 002e 0193     		str	r3, [sp, #4]
+ 1081 0030 1C4B     		ldr	r3, .L82+12
+ 1082 0032 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1083 0034 0093     		str	r3, [sp]
+ 1084 0036 1C4B     		ldr	r3, .L82+16
+ 1085 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1086 003a D222     		movs	r2, #210
+ 1087 003c 40F2B111 		movw	r1, #433
+ 1088 0040 1A48     		ldr	r0, .L82+20
+ 1089              	.LVL108:
+ 117:Src/main.c    ****         printf("rf69 %04x%02x%02x%02x%04x%02x%02x%02x ",
+ 1090              		.loc 2 117 9 view .LVU247
+ 1091 0042 FFF7FEFF 		bl	printf
+ 1092              	.LVL109:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1093              		.loc 2 120 9 is_stmt 1 view .LVU248
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 28
+
+
+ 1094              	.LBB15:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1095              		.loc 2 120 14 view .LVU249
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1096              		.loc 2 120 18 is_stmt 0 view .LVU250
+ 1097 0046 0224     		movs	r4, #2
+ 1098              	.LVL110:
+ 1099              	.L74:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1100              		.loc 2 120 9 discriminator 1 view .LVU251
+ 1101 0048 AC42     		cmp	r4, r5
+ 1102 004a 06DA     		bge	.L80
+ 121:Src/main.c    ****         const char* sep = afc < 0 ? "" : "+";
+ 1103              		.loc 2 121 13 is_stmt 1 discriminator 3 view .LVU252
+ 1104 004c 134B     		ldr	r3, .L82+4
+ 1105 004e 195D     		ldrb	r1, [r3, r4]	@ zero_extendqisi2
+ 1106 0050 1748     		ldr	r0, .L82+24
+ 1107 0052 FFF7FEFF 		bl	printf
+ 1108              	.LVL111:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1109              		.loc 2 120 34 is_stmt 0 discriminator 3 view .LVU253
+ 1110 0056 0134     		adds	r4, r4, #1
+ 1111              	.LVL112:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1112              		.loc 2 120 34 discriminator 3 view .LVU254
+ 1113 0058 F6E7     		b	.L74
+ 1114              	.L80:
+ 120:Src/main.c    ****             printf("%02x", rxBuf[i]);
+ 1115              		.loc 2 120 34 discriminator 3 view .LVU255
+ 1116              	.LBE15:
+ 122:Src/main.c    ****         if (verbose)
+ 1117              		.loc 2 122 9 is_stmt 1 view .LVU256
+ 122:Src/main.c    ****         if (verbose)
+ 1118              		.loc 2 122 31 is_stmt 0 view .LVU257
+ 1119 005a 114B     		ldr	r3, .L82+8
+ 1120 005c B3F90040 		ldrsh	r4, [r3]
+ 1121              	.LVL113:
+ 122:Src/main.c    ****         if (verbose)
+ 1122              		.loc 2 122 40 view .LVU258
+ 1123 0060 002C     		cmp	r4, #0
+ 1124 0062 16DB     		blt	.L81
+ 1125 0064 134D     		ldr	r5, .L82+28
+ 1126              	.LVL114:
+ 1127              	.L76:
+ 123:Src/main.c    ****             printf("  (%g%s%d:%d)", rssi * 0.5, sep, afc, lna);
+ 1128              		.loc 2 123 9 is_stmt 1 discriminator 4 view .LVU259
+ 124:Src/main.c    ****         putchar('\n');
+ 1129              		.loc 2 124 13 discriminator 4 view .LVU260
+ 1130 0066 104B     		ldr	r3, .L82+16
+ 1131 0068 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1132 006a FFF7FEFF 		bl	__aeabi_i2d
+ 1133              	.LVL115:
+ 1134 006e 0022     		movs	r2, #0
+ 1135 0070 114B     		ldr	r3, .L82+32
+ 1136 0072 FFF7FEFF 		bl	__aeabi_dmul
+ 1137              	.LVL116:
+ 1138 0076 0B4B     		ldr	r3, .L82+12
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 29
+
+
+ 1139 0078 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1140 007a 0293     		str	r3, [sp, #8]
+ 1141 007c 0194     		str	r4, [sp, #4]
+ 1142 007e 0095     		str	r5, [sp]
+ 1143 0080 0246     		mov	r2, r0
+ 1144 0082 0B46     		mov	r3, r1
+ 1145 0084 0D48     		ldr	r0, .L82+36
+ 1146 0086 FFF7FEFF 		bl	printf
+ 1147              	.LVL117:
+ 125:Src/main.c    ****     }
+ 1148              		.loc 2 125 9 discriminator 4 view .LVU261
+ 1149 008a 0A20     		movs	r0, #10
+ 1150 008c FFF7FEFF 		bl	putchar
+ 1151              	.LVL118:
+ 1152              	.LBE14:
+ 1153              		.loc 2 127 1 is_stmt 0 discriminator 4 view .LVU262
+ 1154 0090 C1E7     		b	.L72
+ 1155              	.LVL119:
+ 1156              	.L81:
+ 1157              	.LBB16:
+ 122:Src/main.c    ****         if (verbose)
+ 1158              		.loc 2 122 40 view .LVU263
+ 1159 0092 0B4D     		ldr	r5, .L82+40
+ 1160              	.LVL120:
+ 122:Src/main.c    ****         if (verbose)
+ 1161              		.loc 2 122 40 view .LVU264
+ 1162 0094 E7E7     		b	.L76
+ 1163              	.L83:
+ 1164 0096 00BF     		.align	2
+ 1165              	.L82:
+ 1166 0098 08000000 		.word	.LC5
+ 1167 009c 00000000 		.word	rxBuf
+ 1168 00a0 00000000 		.word	afc
+ 1169 00a4 00000000 		.word	lna
+ 1170 00a8 00000000 		.word	rssi
+ 1171 00ac 10000000 		.word	.LC6
+ 1172 00b0 38000000 		.word	.LC7
+ 1173 00b4 00000000 		.word	.LC3
+ 1174 00b8 0000E03F 		.word	1071644672
+ 1175 00bc 40000000 		.word	.LC8
+ 1176 00c0 04000000 		.word	.LC4
+ 1177              	.LBE16:
+ 1178              		.cfi_endproc
+ 1179              	.LFE139:
+ 1181              		.section	.text._Error_Handler,"ax",%progbits
+ 1182              		.align	1
+ 1183              		.global	_Error_Handler
+ 1184              		.syntax unified
+ 1185              		.thumb
+ 1186              		.thumb_func
+ 1187              		.fpu fpv4-sp-d16
+ 1189              	_Error_Handler:
+ 1190              	.LFB142:
+ 128:Src/main.c    **** 
+ 129:Src/main.c    **** /* USER CODE END 0 */
+ 130:Src/main.c    **** 
+ 131:Src/main.c    **** /**
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 30
+
+
+ 132:Src/main.c    ****   * @brief  The application entry point.
+ 133:Src/main.c    ****   *
+ 134:Src/main.c    ****   * @retval None
+ 135:Src/main.c    ****   */
+ 136:Src/main.c    **** int main(void)
+ 137:Src/main.c    **** {
+ 138:Src/main.c    ****   /* USER CODE BEGIN 1 */
+ 139:Src/main.c    **** 
+ 140:Src/main.c    ****   /* USER CODE END 1 */
+ 141:Src/main.c    **** 
+ 142:Src/main.c    ****   /* MCU Configuration----------------------------------------------------------*/
+ 143:Src/main.c    **** 
+ 144:Src/main.c    ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 145:Src/main.c    ****   HAL_Init();
+ 146:Src/main.c    **** 
+ 147:Src/main.c    ****   /* USER CODE BEGIN Init */
+ 148:Src/main.c    **** 
+ 149:Src/main.c    ****   /* USER CODE END Init */
+ 150:Src/main.c    **** 
+ 151:Src/main.c    ****   /* Configure the system clock */
+ 152:Src/main.c    ****   SystemClock_Config();
+ 153:Src/main.c    **** 
+ 154:Src/main.c    ****   /* USER CODE BEGIN SysInit */
+ 155:Src/main.c    **** 
+ 156:Src/main.c    ****   /* USER CODE END SysInit */
+ 157:Src/main.c    **** 
+ 158:Src/main.c    ****   /* Initialize all configured peripherals */
+ 159:Src/main.c    ****   MX_GPIO_Init();
+ 160:Src/main.c    ****   MX_USART2_UART_Init();
+ 161:Src/main.c    ****   MX_SPI2_Init();
+ 162:Src/main.c    ****   /* USER CODE BEGIN 2 */
+ 163:Src/main.c    ****   if (radio_setup()) {
+ 164:Src/main.c    ****     printf("radio innit.\r\n");
+ 165:Src/main.c    ****   }
+ 166:Src/main.c    **** 
+ 167:Src/main.c    ****   /* USER CODE END 2 */
+ 168:Src/main.c    **** 
+ 169:Src/main.c    ****   /* Infinite loop */
+ 170:Src/main.c    ****   /* USER CODE BEGIN WHILE */
+ 171:Src/main.c    ****   while (1)
+ 172:Src/main.c    ****   {
+ 173:Src/main.c    **** radio_loop();
+ 174:Src/main.c    **** 
+ 175:Src/main.c    ****   /* USER CODE END WHILE */
+ 176:Src/main.c    **** 
+ 177:Src/main.c    ****   /* USER CODE BEGIN 3 */
+ 178:Src/main.c    **** 
+ 179:Src/main.c    ****   }
+ 180:Src/main.c    ****   /* USER CODE END 3 */
+ 181:Src/main.c    **** 
+ 182:Src/main.c    **** }
+ 183:Src/main.c    **** 
+ 184:Src/main.c    **** /**
+ 185:Src/main.c    ****   * @brief System Clock Configuration
+ 186:Src/main.c    ****   * @retval None
+ 187:Src/main.c    ****   */
+ 188:Src/main.c    **** void SystemClock_Config(void)
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 31
+
+
+ 189:Src/main.c    **** {
+ 190:Src/main.c    **** 
+ 191:Src/main.c    ****   RCC_OscInitTypeDef RCC_OscInitStruct;
+ 192:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 193:Src/main.c    ****   RCC_PeriphCLKInitTypeDef PeriphClkInit;
+ 194:Src/main.c    **** 
+ 195:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks
+ 196:Src/main.c    ****     */
+ 197:Src/main.c    ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+ 198:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 199:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 200:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 201:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 202:Src/main.c    ****   {
+ 203:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 204:Src/main.c    ****   }
+ 205:Src/main.c    **** 
+ 206:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks
+ 207:Src/main.c    ****     */
+ 208:Src/main.c    ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 209:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 210:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+ 211:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 212:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 213:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 214:Src/main.c    **** 
+ 215:Src/main.c    ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+ 216:Src/main.c    ****   {
+ 217:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 218:Src/main.c    ****   }
+ 219:Src/main.c    **** 
+ 220:Src/main.c    ****   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+ 221:Src/main.c    ****   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+ 222:Src/main.c    ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 223:Src/main.c    ****   {
+ 224:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 225:Src/main.c    ****   }
+ 226:Src/main.c    **** 
+ 227:Src/main.c    ****     /**Configure the Systick interrupt time
+ 228:Src/main.c    ****     */
+ 229:Src/main.c    ****   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+ 230:Src/main.c    **** 
+ 231:Src/main.c    ****     /**Configure the Systick
+ 232:Src/main.c    ****     */
+ 233:Src/main.c    ****   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+ 234:Src/main.c    **** 
+ 235:Src/main.c    ****   /* SysTick_IRQn interrupt configuration */
+ 236:Src/main.c    ****   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+ 237:Src/main.c    **** }
+ 238:Src/main.c    **** 
+ 239:Src/main.c    **** /* USER CODE BEGIN 4 */
+ 240:Src/main.c    **** 
+ 241:Src/main.c    **** /* USER CODE END 4 */
+ 242:Src/main.c    **** 
+ 243:Src/main.c    **** /**
+ 244:Src/main.c    ****   * @brief  This function is executed in case of error occurrence.
+ 245:Src/main.c    ****   * @param  file: The file name as string.
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 32
+
+
+ 246:Src/main.c    ****   * @param  line: The line in file as a number.
+ 247:Src/main.c    ****   * @retval None
+ 248:Src/main.c    ****   */
+ 249:Src/main.c    **** void _Error_Handler(char *file, int line)
+ 250:Src/main.c    **** {
+ 1191              		.loc 2 250 1 is_stmt 1 view -0
+ 1192              		.cfi_startproc
+ 1193              		@ Volatile: function does not return.
+ 1194              		@ args = 0, pretend = 0, frame = 0
+ 1195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1196              		@ link register save eliminated.
+ 1197              	.LVL121:
+ 1198              	.L85:
+ 251:Src/main.c    ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 252:Src/main.c    ****   /* User can add his own implementation to report the HAL error return state */
+ 253:Src/main.c    ****   while(1)
+ 1199              		.loc 2 253 3 discriminator 1 view .LVU266
+ 254:Src/main.c    ****   {
+ 255:Src/main.c    ****   }
+ 1200              		.loc 2 255 3 discriminator 1 view .LVU267
+ 1201 0000 FEE7     		b	.L85
+ 1202              		.cfi_endproc
+ 1203              	.LFE142:
+ 1205              		.section	.text.SystemClock_Config,"ax",%progbits
+ 1206              		.align	1
+ 1207              		.global	SystemClock_Config
+ 1208              		.syntax unified
+ 1209              		.thumb
+ 1210              		.thumb_func
+ 1211              		.fpu fpv4-sp-d16
+ 1213              	SystemClock_Config:
+ 1214              	.LFB141:
+ 189:Src/main.c    **** 
+ 1215              		.loc 2 189 1 view -0
+ 1216              		.cfi_startproc
+ 1217              		@ args = 0, pretend = 0, frame = 152
+ 1218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1219 0000 00B5     		push	{lr}
+ 1220              	.LCFI17:
+ 1221              		.cfi_def_cfa_offset 4
+ 1222              		.cfi_offset 14, -4
+ 1223 0002 A7B0     		sub	sp, sp, #156
+ 1224              	.LCFI18:
+ 1225              		.cfi_def_cfa_offset 160
+ 191:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 1226              		.loc 2 191 3 view .LVU269
+ 192:Src/main.c    ****   RCC_PeriphCLKInitTypeDef PeriphClkInit;
+ 1227              		.loc 2 192 3 view .LVU270
+ 193:Src/main.c    **** 
+ 1228              		.loc 2 193 3 view .LVU271
+ 197:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 1229              		.loc 2 197 3 view .LVU272
+ 197:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 1230              		.loc 2 197 36 is_stmt 0 view .LVU273
+ 1231 0004 0223     		movs	r3, #2
+ 1232 0006 1C93     		str	r3, [sp, #112]
+ 198:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 33
+
+
+ 1233              		.loc 2 198 3 is_stmt 1 view .LVU274
+ 198:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 1234              		.loc 2 198 30 is_stmt 0 view .LVU275
+ 1235 0008 0123     		movs	r3, #1
+ 1236 000a 1F93     		str	r3, [sp, #124]
+ 199:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 1237              		.loc 2 199 3 is_stmt 1 view .LVU276
+ 199:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 1238              		.loc 2 199 41 is_stmt 0 view .LVU277
+ 1239 000c 1023     		movs	r3, #16
+ 1240 000e 2093     		str	r3, [sp, #128]
+ 200:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1241              		.loc 2 200 3 is_stmt 1 view .LVU278
+ 200:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1242              		.loc 2 200 34 is_stmt 0 view .LVU279
+ 1243 0010 0023     		movs	r3, #0
+ 1244 0012 2293     		str	r3, [sp, #136]
+ 201:Src/main.c    ****   {
+ 1245              		.loc 2 201 3 is_stmt 1 view .LVU280
+ 201:Src/main.c    ****   {
+ 1246              		.loc 2 201 7 is_stmt 0 view .LVU281
+ 1247 0014 1CA8     		add	r0, sp, #112
+ 1248 0016 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 1249              	.LVL122:
+ 201:Src/main.c    ****   {
+ 1250              		.loc 2 201 6 view .LVU282
+ 1251 001a 30BB     		cbnz	r0, .L91
+ 208:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 1252              		.loc 2 208 3 is_stmt 1 view .LVU283
+ 208:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 1253              		.loc 2 208 31 is_stmt 0 view .LVU284
+ 1254 001c 0F23     		movs	r3, #15
+ 1255 001e 1793     		str	r3, [sp, #92]
+ 210:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1256              		.loc 2 210 3 is_stmt 1 view .LVU285
+ 210:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1257              		.loc 2 210 34 is_stmt 0 view .LVU286
+ 1258 0020 0021     		movs	r1, #0
+ 1259 0022 1891     		str	r1, [sp, #96]
+ 211:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 1260              		.loc 2 211 3 is_stmt 1 view .LVU287
+ 211:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 1261              		.loc 2 211 35 is_stmt 0 view .LVU288
+ 1262 0024 1991     		str	r1, [sp, #100]
+ 212:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 1263              		.loc 2 212 3 is_stmt 1 view .LVU289
+ 212:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 1264              		.loc 2 212 36 is_stmt 0 view .LVU290
+ 1265 0026 1A91     		str	r1, [sp, #104]
+ 213:Src/main.c    **** 
+ 1266              		.loc 2 213 3 is_stmt 1 view .LVU291
+ 213:Src/main.c    **** 
+ 1267              		.loc 2 213 36 is_stmt 0 view .LVU292
+ 1268 0028 1B91     		str	r1, [sp, #108]
+ 215:Src/main.c    ****   {
+ 1269              		.loc 2 215 3 is_stmt 1 view .LVU293
+ 215:Src/main.c    ****   {
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 34
+
+
+ 1270              		.loc 2 215 7 is_stmt 0 view .LVU294
+ 1271 002a 17A8     		add	r0, sp, #92
+ 1272 002c FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 1273              	.LVL123:
+ 215:Src/main.c    ****   {
+ 1274              		.loc 2 215 6 view .LVU295
+ 1275 0030 F8B9     		cbnz	r0, .L92
+ 220:Src/main.c    ****   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+ 1276              		.loc 2 220 3 is_stmt 1 view .LVU296
+ 220:Src/main.c    ****   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+ 1277              		.loc 2 220 38 is_stmt 0 view .LVU297
+ 1278 0032 0223     		movs	r3, #2
+ 1279 0034 0193     		str	r3, [sp, #4]
+ 221:Src/main.c    ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 1280              		.loc 2 221 3 is_stmt 1 view .LVU298
+ 221:Src/main.c    ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 1281              		.loc 2 221 38 is_stmt 0 view .LVU299
+ 1282 0036 0023     		movs	r3, #0
+ 1283 0038 0493     		str	r3, [sp, #16]
+ 222:Src/main.c    ****   {
+ 1284              		.loc 2 222 3 is_stmt 1 view .LVU300
+ 222:Src/main.c    ****   {
+ 1285              		.loc 2 222 7 is_stmt 0 view .LVU301
+ 1286 003a 01A8     		add	r0, sp, #4
+ 1287 003c FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 1288              	.LVL124:
+ 222:Src/main.c    ****   {
+ 1289              		.loc 2 222 6 view .LVU302
+ 1290 0040 D8B9     		cbnz	r0, .L93
+ 229:Src/main.c    **** 
+ 1291              		.loc 2 229 3 is_stmt 1 view .LVU303
+ 229:Src/main.c    **** 
+ 1292              		.loc 2 229 22 is_stmt 0 view .LVU304
+ 1293 0042 FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
+ 1294              	.LVL125:
+ 229:Src/main.c    **** 
+ 1295              		.loc 2 229 3 view .LVU305
+ 1296 0046 0F4B     		ldr	r3, .L94
+ 1297 0048 A3FB0030 		umull	r3, r0, r3, r0
+ 1298 004c 8009     		lsrs	r0, r0, #6
+ 1299 004e FFF7FEFF 		bl	HAL_SYSTICK_Config
+ 1300              	.LVL126:
+ 233:Src/main.c    **** 
+ 1301              		.loc 2 233 3 is_stmt 1 view .LVU306
+ 1302 0052 0420     		movs	r0, #4
+ 1303 0054 FFF7FEFF 		bl	HAL_SYSTICK_CLKSourceConfig
+ 1304              	.LVL127:
+ 236:Src/main.c    **** }
+ 1305              		.loc 2 236 3 view .LVU307
+ 1306 0058 0022     		movs	r2, #0
+ 1307 005a 1146     		mov	r1, r2
+ 1308 005c 4FF0FF30 		mov	r0, #-1
+ 1309 0060 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 1310              	.LVL128:
+ 237:Src/main.c    **** 
+ 1311              		.loc 2 237 1 is_stmt 0 view .LVU308
+ 1312 0064 27B0     		add	sp, sp, #156
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 35
+
+
+ 1313              	.LCFI19:
+ 1314              		.cfi_remember_state
+ 1315              		.cfi_def_cfa_offset 4
+ 1316              		@ sp needed
+ 1317 0066 5DF804FB 		ldr	pc, [sp], #4
+ 1318              	.L91:
+ 1319              	.LCFI20:
+ 1320              		.cfi_restore_state
+ 203:Src/main.c    ****   }
+ 1321              		.loc 2 203 5 is_stmt 1 view .LVU309
+ 1322 006a CB21     		movs	r1, #203
+ 1323 006c 0648     		ldr	r0, .L94+4
+ 1324 006e FFF7FEFF 		bl	_Error_Handler
+ 1325              	.LVL129:
+ 1326              	.L92:
+ 217:Src/main.c    ****   }
+ 1327              		.loc 2 217 5 view .LVU310
+ 1328 0072 D921     		movs	r1, #217
+ 1329 0074 0448     		ldr	r0, .L94+4
+ 1330 0076 FFF7FEFF 		bl	_Error_Handler
+ 1331              	.LVL130:
+ 1332              	.L93:
+ 224:Src/main.c    ****   }
+ 1333              		.loc 2 224 5 view .LVU311
+ 1334 007a E021     		movs	r1, #224
+ 1335 007c 0248     		ldr	r0, .L94+4
+ 1336 007e FFF7FEFF 		bl	_Error_Handler
+ 1337              	.LVL131:
+ 1338              	.L95:
+ 1339 0082 00BF     		.align	2
+ 1340              	.L94:
+ 1341 0084 D34D6210 		.word	274877907
+ 1342 0088 00000000 		.word	.LC9
+ 1343              		.cfi_endproc
+ 1344              	.LFE141:
+ 1346              		.section	.text.main,"ax",%progbits
+ 1347              		.align	1
+ 1348              		.global	main
+ 1349              		.syntax unified
+ 1350              		.thumb
+ 1351              		.thumb_func
+ 1352              		.fpu fpv4-sp-d16
+ 1354              	main:
+ 1355              	.LFB140:
+ 137:Src/main.c    ****   /* USER CODE BEGIN 1 */
+ 1356              		.loc 2 137 1 view -0
+ 1357              		.cfi_startproc
+ 1358              		@ Volatile: function does not return.
+ 1359              		@ args = 0, pretend = 0, frame = 0
+ 1360              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1361 0000 08B5     		push	{r3, lr}
+ 1362              	.LCFI21:
+ 1363              		.cfi_def_cfa_offset 8
+ 1364              		.cfi_offset 3, -8
+ 1365              		.cfi_offset 14, -4
+ 145:Src/main.c    **** 
+ 1366              		.loc 2 145 3 view .LVU313
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 36
+
+
+ 1367 0002 FFF7FEFF 		bl	HAL_Init
+ 1368              	.LVL132:
+ 152:Src/main.c    **** 
+ 1369              		.loc 2 152 3 view .LVU314
+ 1370 0006 FFF7FEFF 		bl	SystemClock_Config
+ 1371              	.LVL133:
+ 159:Src/main.c    ****   MX_USART2_UART_Init();
+ 1372              		.loc 2 159 3 view .LVU315
+ 1373 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 1374              	.LVL134:
+ 160:Src/main.c    ****   MX_SPI2_Init();
+ 1375              		.loc 2 160 3 view .LVU316
+ 1376 000e FFF7FEFF 		bl	MX_USART2_UART_Init
+ 1377              	.LVL135:
+ 161:Src/main.c    ****   /* USER CODE BEGIN 2 */
+ 1378              		.loc 2 161 3 view .LVU317
+ 1379 0012 FFF7FEFF 		bl	MX_SPI2_Init
+ 1380              	.LVL136:
+ 163:Src/main.c    ****     printf("radio innit.\r\n");
+ 1381              		.loc 2 163 3 view .LVU318
+ 163:Src/main.c    ****     printf("radio innit.\r\n");
+ 1382              		.loc 2 163 7 is_stmt 0 view .LVU319
+ 1383 0016 FFF7FEFF 		bl	radio_setup
+ 1384              	.LVL137:
+ 163:Src/main.c    ****     printf("radio innit.\r\n");
+ 1385              		.loc 2 163 6 view .LVU320
+ 1386 001a 10B9     		cbnz	r0, .L100
+ 1387              	.L98:
+ 171:Src/main.c    ****   {
+ 1388              		.loc 2 171 3 is_stmt 1 discriminator 1 view .LVU321
+ 173:Src/main.c    **** 
+ 1389              		.loc 2 173 1 discriminator 1 view .LVU322
+ 1390 001c FFF7FEFF 		bl	radio_loop
+ 1391              	.LVL138:
+ 1392 0020 FCE7     		b	.L98
+ 1393              	.L100:
+ 164:Src/main.c    ****   }
+ 1394              		.loc 2 164 5 view .LVU323
+ 1395 0022 0248     		ldr	r0, .L101
+ 1396 0024 FFF7FEFF 		bl	puts
+ 1397              	.LVL139:
+ 1398 0028 F8E7     		b	.L98
+ 1399              	.L102:
+ 1400 002a 00BF     		.align	2
+ 1401              	.L101:
+ 1402 002c 00000000 		.word	.LC10
+ 1403              		.cfi_endproc
+ 1404              	.LFE140:
+ 1406              		.global	verbose
+ 1407              		.global	rf_nodeid
+ 1408              		.global	rf_group
+ 1409              		.global	rf_freq
+ 1410              		.global	txCnt
+ 1411              		.comm	txBuf,62,4
+ 1412              		.comm	rxBuf,64,4
+ 1413              		.comm	mode,1,1
+ 1414              		.comm	parity,1,1
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 37
+
+
+ 1415              		.comm	myId,1,1
+ 1416              		.comm	lna,1,1
+ 1417              		.comm	rssi,1,1
+ 1418              		.comm	afc,2,2
+ 1419              		.section	.bss.lastFlag.8941,"aw",%nobits
+ 1420              		.set	.LANCHOR1,. + 0
+ 1423              	lastFlag.8941:
+ 1424 0000 00       		.space	1
+ 1425              		.section	.bss.txCnt,"aw",%nobits
+ 1426              		.align	1
+ 1429              	txCnt:
+ 1430 0000 0000     		.space	2
+ 1431              		.section	.rodata.SystemClock_Config.str1.4,"aMS",%progbits,1
+ 1432              		.align	2
+ 1433              	.LC9:
+ 1434 0000 5372632F 		.ascii	"Src/main.c\000"
+ 1434      6D61696E 
+ 1434      2E6300
+ 1435              		.section	.rodata.configRegs,"a"
+ 1436              		.align	2
+ 1437              		.set	.LANCHOR0,. + 0
+ 1440              	configRegs:
+ 1441 0000 02       		.byte	2
+ 1442 0001 00       		.byte	0
+ 1443 0002 03       		.byte	3
+ 1444 0003 02       		.byte	2
+ 1445 0004 04       		.byte	4
+ 1446 0005 8A       		.byte	-118
+ 1447 0006 05       		.byte	5
+ 1448 0007 02       		.byte	2
+ 1449 0008 06       		.byte	6
+ 1450 0009 E1       		.byte	-31
+ 1451 000a 0B       		.byte	11
+ 1452 000b 20       		.byte	32
+ 1453 000c 19       		.byte	25
+ 1454 000d 4A       		.byte	74
+ 1455 000e 1A       		.byte	26
+ 1456 000f 42       		.byte	66
+ 1457 0010 1E       		.byte	30
+ 1458 0011 0C       		.byte	12
+ 1459 0012 25       		.byte	37
+ 1460 0013 40       		.byte	64
+ 1461 0014 26       		.byte	38
+ 1462 0015 07       		.byte	7
+ 1463 0016 29       		.byte	41
+ 1464 0017 A0       		.byte	-96
+ 1465 0018 2D       		.byte	45
+ 1466 0019 05       		.byte	5
+ 1467 001a 2E       		.byte	46
+ 1468 001b 88       		.byte	-120
+ 1469 001c 2F       		.byte	47
+ 1470 001d 2D       		.byte	45
+ 1471 001e 37       		.byte	55
+ 1472 001f D0       		.byte	-48
+ 1473 0020 38       		.byte	56
+ 1474 0021 42       		.byte	66
+ 1475 0022 3C       		.byte	60
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 38
+
+
+ 1476 0023 8F       		.byte	-113
+ 1477 0024 3D       		.byte	61
+ 1478 0025 12       		.byte	18
+ 1479 0026 6F       		.byte	111
+ 1480 0027 20       		.byte	32
+ 1481 0028 71       		.byte	113
+ 1482 0029 02       		.byte	2
+ 1483 002a 00       		.byte	0
+ 1484              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 1485              		.align	2
+ 1486              	.LC10:
+ 1487 0000 72616469 		.ascii	"radio innit.\015\000"
+ 1487      6F20696E 
+ 1487      6E69742E 
+ 1487      0D00
+ 1488              		.section	.rodata.radio_loop.str1.4,"aMS",%progbits,1
+ 1489              		.align	2
+ 1490              	.LC3:
+ 1491 0000 2B00     		.ascii	"+\000"
+ 1492 0002 0000     		.space	2
+ 1493              	.LC4:
+ 1494 0004 00       		.ascii	"\000"
+ 1495 0005 000000   		.space	3
+ 1496              	.LC5:
+ 1497 0008 6C6F6F70 		.ascii	"loopy\000"
+ 1497      7900
+ 1498 000e 0000     		.space	2
+ 1499              	.LC6:
+ 1500 0010 72663639 		.ascii	"rf69 %04x%02x%02x%02x%04x%02x%02x%02x \000"
+ 1500      20253034 
+ 1500      78253032 
+ 1500      78253032 
+ 1500      78253032 
+ 1501 0037 00       		.space	1
+ 1502              	.LC7:
+ 1503 0038 25303278 		.ascii	"%02x\000"
+ 1503      00
+ 1504 003d 000000   		.space	3
+ 1505              	.LC8:
+ 1506 0040 20202825 		.ascii	"  (%g%s%d:%d)\000"
+ 1506      67257325 
+ 1506      643A2564 
+ 1506      2900
+ 1507              		.section	.rodata.radio_setup.str1.4,"aMS",%progbits,1
+ 1508              		.align	2
+ 1509              	.LC0:
+ 1510 0000 0A5B7261 		.ascii	"\012[radio]\000"
+ 1510      64696F5D 
+ 1510      00
+ 1511 0009 000000   		.space	3
+ 1512              	.LC1:
+ 1513 000c 2020456E 		.ascii	"  Enter 't' to broadcast a test packet as node %d.\012"
+ 1513      74657220 
+ 1513      27742720 
+ 1513      746F2062 
+ 1513      726F6164 
+ 1514 003f 00       		.ascii	"\000"
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 39
+
+
+ 1515              	.LC2:
+ 1516 0040 20204C69 		.ascii	"  Listening for packets on %dMHz, group %d ...\012\012"
+ 1516      7374656E 
+ 1516      696E6720 
+ 1516      666F7220 
+ 1516      7061636B 
+ 1517 0070 00       		.ascii	"\000"
+ 1518              		.section	.rodata.rf_freq,"a"
+ 1519              		.align	2
+ 1522              	rf_freq:
+ 1523 0000 B1010000 		.word	433
+ 1524              		.section	.rodata.rf_group,"a"
+ 1525              		.align	2
+ 1528              	rf_group:
+ 1529 0000 D2000000 		.word	210
+ 1530              		.section	.rodata.rf_nodeid,"a"
+ 1531              		.align	2
+ 1534              	rf_nodeid:
+ 1535 0000 01000000 		.word	1
+ 1536              		.section	.rodata.verbose,"a"
+ 1539              	verbose:
+ 1540 0000 01       		.byte	1
+ 1541              		.text
+ 1542              	.Letext0:
+ 1543              		.file 3 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/machine/_default_types
+ 1544              		.file 4 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 1545              		.file 5 "Drivers/CMSIS/Include/core_cm4.h"
+ 1546              		.file 6 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/system_stm32f3xx.h"
+ 1547              		.file 7 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h"
+ 1548              		.file 8 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/sys/lock.h"
+ 1549              		.file 9 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/sys/_types.h"
+ 1550              		.file 10 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/lib/gcc/arm-none-eabi/8.2.1/include/stddef.
+ 1551              		.file 11 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/sys/reent.h"
+ 1552              		.file 12 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h"
+ 1553              		.file 13 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h"
+ 1554              		.file 14 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc_ex.h"
+ 1555              		.file 15 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_dma.h"
+ 1556              		.file 16 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi.h"
+ 1557              		.file 17 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h"
+ 1558              		.file 18 "Inc/spi.h"
+ 1559              		.file 19 "Inc/usart.h"
+ 1560              		.file 20 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_cortex.h"
+ 1561              		.file 21 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h"
+ 1562              		.file 22 "Inc/gpio.h"
+ 1563              		.file 23 "/usr/local/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/include/stdio.h"
+ 1564              		.file 24 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h"
+ 1565              		.file 25 "<built-in>"
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 40
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:18     .text.rfm69_rwReg:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:26     .text.rfm69_rwReg:0000000000000000 rfm69_rwReg
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:81     .text.rfm69_rwReg:0000000000000030 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:86     .text.rfm69_readReg:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:93     .text.rfm69_readReg:0000000000000000 rfm69_readReg
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:117    .text.rfm69_writeReg:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:124    .text.rfm69_writeReg:0000000000000000 rfm69_writeReg
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:149    .text.rfm69_setMode:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:156    .text.rfm69_setMode:0000000000000000 rfm69_setMode
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:207    .text.rfm69_setMode:000000000000002c $d
+                            *COM*:0000000000000001 mode
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:212    .text.rfm69_setFrequency:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:219    .text.rfm69_setFrequency:0000000000000000 rfm69_setFrequency
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:281    .text.rfm69_setFrequency:000000000000003c $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:287    .text.rfm69_configure:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:294    .text.rfm69_configure:0000000000000000 rfm69_configure
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:340    .text.rfm69_init:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:347    .text.rfm69_init:0000000000000000 rfm69_init
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:409    .text.rfm69_init:000000000000003c $d
+                            *COM*:0000000000000001 myId
+                            *COM*:0000000000000001 parity
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:416    .text.rfm69_encrypt:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:423    .text.rfm69_encrypt:0000000000000000 rfm69_encrypt
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:502    .text.rfm69_txPower:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:509    .text.rfm69_txPower:0000000000000000 rfm69_txPower
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:546    .text.rfm69_sleep:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:553    .text.rfm69_sleep:0000000000000000 rfm69_sleep
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:574    .text.rfm69_receive:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:581    .text.rfm69_receive:0000000000000000 rfm69_receive
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:803    .text.rfm69_receive:00000000000000cc $d
+                            *COM*:0000000000000001 rssi
+                            *COM*:0000000000000001 lna
+                            *COM*:0000000000000002 afc
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:814    .text.rfm69_send:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:821    .text.rfm69_send:0000000000000000 rfm69_send
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:925    .text.rfm69_send:000000000000006c $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:931    .text.radio_setup:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:938    .text.radio_setup:0000000000000000 radio_setup
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1007   .text.radio_setup:0000000000000048 $d
+                            *COM*:000000000000003e txBuf
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1017   .text.radio_loop:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1024   .text.radio_loop:0000000000000000 radio_loop
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1166   .text.radio_loop:0000000000000098 $d
+                            *COM*:0000000000000040 rxBuf
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1182   .text._Error_Handler:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1189   .text._Error_Handler:0000000000000000 _Error_Handler
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1206   .text.SystemClock_Config:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1213   .text.SystemClock_Config:0000000000000000 SystemClock_Config
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1341   .text.SystemClock_Config:0000000000000084 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1347   .text.main:0000000000000000 $t
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1354   .text.main:0000000000000000 main
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1402   .text.main:000000000000002c $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1539   .rodata.verbose:0000000000000000 verbose
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1534   .rodata.rf_nodeid:0000000000000000 rf_nodeid
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1528   .rodata.rf_group:0000000000000000 rf_group
+ARM GAS  /var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s 			page 41
+
+
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1522   .rodata.rf_freq:0000000000000000 rf_freq
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1429   .bss.txCnt:0000000000000000 txCnt
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1423   .bss.lastFlag.8941:0000000000000000 lastFlag.8941
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1424   .bss.lastFlag.8941:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1426   .bss.txCnt:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1432   .rodata.SystemClock_Config.str1.4:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1436   .rodata.configRegs:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1440   .rodata.configRegs:0000000000000000 configRegs
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1485   .rodata.main.str1.4:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1489   .rodata.radio_loop.str1.4:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1508   .rodata.radio_setup.str1.4:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1519   .rodata.rf_freq:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1525   .rodata.rf_group:0000000000000000 $d
+/var/folders/8c/gyvcglfx7f97kbqb2h83mm_r0000gn/T//ccLBuwd5.s:1531   .rodata.rf_nodeid:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+SPI_transfer8
+puts
+printf
+__aeabi_i2d
+__aeabi_dmul
+putchar
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_RCCEx_PeriphCLKConfig
+HAL_RCC_GetHCLKFreq
+HAL_SYSTICK_Config
+HAL_SYSTICK_CLKSourceConfig
+HAL_NVIC_SetPriority
+HAL_Init
+MX_GPIO_Init
+MX_USART2_UART_Init
+MX_SPI2_Init
