@@ -33,9 +33,10 @@ uint8_t rfm69_rwReg (uint8_t cmd, uint8_t val) {
     return in;
 }
 
-
 uint8_t rfm69_readReg(uint8_t addr) { return rfm69_rwReg(addr, 0); }
+
 void rfm69_writeReg(uint8_t addr, uint8_t val) { rfm69_rwReg(addr | 0x80, val); }
+
 /*
 uint8_t rfm69_readReg(uint8_t addr)
 {
@@ -55,6 +56,7 @@ void rfm69_writeReg(uint8_t addr, uint8_t value)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
 }
 */
+
 #define  REG_FIFO         0x00
 #define  REG_OPMODE       0x01
 #define  REG_FRFMSB       0x07
@@ -121,9 +123,12 @@ void rfm69_setFrequency(uint32_t hz) {
   // this is still 4 ppm, i.e. well below the radio's 32 MHz crystal accuracy
   // 868.0 MHz = 0xD90000, 868.3 MHz = 0xD91300, 915.0 MHz = 0xE4C000
   uint32_t frf = (hz << 2) / (32000000L >> 11);
-  rfm69_writeReg(REG_FRFMSB, frf >> 10);
-  rfm69_writeReg(REG_FRFMSB + 1, frf >> 2);
-  rfm69_writeReg(REG_FRFMSB + 2, frf << 6);
+  //#define RF_FRFMSB_433             0x6C
+  //#define RF_FRFMID_433             0x40
+  //#define RF_FRFLSB_433             0x00
+  rfm69_writeReg(REG_FRFMSB, 0x6C);
+  rfm69_writeReg(REG_FRFMSB + 1, 0x40);
+  rfm69_writeReg(REG_FRFMSB + 2, 0x00);
 }
 
 void rfm69_configure(const uint8_t *p) {

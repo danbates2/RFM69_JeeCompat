@@ -67,7 +67,7 @@ uint16_t txCnt = 0;
 
 const int rf_freq = 433;
 const int rf_group = 210;
-const int rf_nodeid = 1;
+const int rf_nodeid = 2;
 
 const bool verbose = true;
 
@@ -79,12 +79,12 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-bool radio_setup(void);
+void radio_setup(void);
 void radio_loop(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-bool radio_setup() {
+void radio_setup() {
 
     printf("\n[radio]\n");
 
@@ -97,12 +97,12 @@ bool radio_setup() {
 
     printf("  Enter 't' to broadcast a test packet as node %d.\n", rf_nodeid);
     printf("  Listening for packets on %dMHz, group %d ...\n\n", rf_freq, rf_group);
-    return true;
 }
 
 extern int16_t afc;
 extern uint8_t rssi;
 extern uint8_t lna;
+
 void radio_loop() {
     /*
     if (serial_getc() == 't') {
@@ -111,7 +111,7 @@ void radio_loop() {
         txCnt = (txCnt + 1) % sizeof txBuf;
     }
     */
-printf("loopy");
+//printf("loopy");
     int len = rfm69_receive(rxBuf, sizeof(rxBuf));
     if (len >= 0) {
         printf("rf69 %04x%02x%02x%02x%04x%02x%02x%02x ",
@@ -160,9 +160,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  if (radio_setup()) {
-    printf("radio innit.\r\n");
-  }
+
+  radio_setup();
 
   /* USER CODE END 2 */
 
@@ -170,7 +169,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-radio_loop();
+
+    radio_loop();
 
   /* USER CODE END WHILE */
 
